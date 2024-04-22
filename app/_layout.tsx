@@ -18,7 +18,7 @@ export const unstable_settings = {
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().then(r => r);
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -33,7 +33,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().then(r => r);
     }
   }, [loaded]);
 
