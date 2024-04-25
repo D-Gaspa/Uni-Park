@@ -31,8 +31,22 @@ export default function TabLayout() {
                 options={{
                     title: 'Home',
                     tabBarIcon: ({color}) => <TabBarIcon name="home" color={color}/>,
+                    headerLeft: () => (
+                        <Link href="/qr" asChild>
+                            <Pressable>
+                                {({pressed}) => (
+                                    <FontAwesome
+                                        name="qrcode"
+                                        size={25}
+                                        color={Colors[colorScheme ?? 'light'].text}
+                                        style={{marginLeft: 15, opacity: pressed ? 0.5 : 1}}
+                                    />
+                                )}
+                            </Pressable>
+                        </Link>
+                    ),
                     headerRight: () => (
-                        <Link href="/modal" asChild>
+                        <Link href="/faq" asChild>
                             <Pressable>
                                 {({pressed}) => (
                                     <FontAwesome
