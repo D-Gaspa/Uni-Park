@@ -1,5 +1,5 @@
 import {Slot} from 'expo-router';
-import {SessionProvider} from '@/components/ctx';
+import {SessionProvider} from '@/components/AuthContext.tsx';
 import {useColorScheme} from '@/components/useColorScheme';
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {initializeAuth, getReactNativePersistence} from 'firebase/auth';

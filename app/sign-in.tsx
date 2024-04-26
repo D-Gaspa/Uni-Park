@@ -1,6 +1,6 @@
-import {StyleSheet, Button, TextInput, TouchableOpacity, Linking} from 'react-native';
+import {StyleSheet, TextInput, TouchableOpacity, Linking} from 'react-native';
 import {Text, View, useThemeColor} from '@/components/Themed';
-import {useSession} from '@/components/ctx';
+import {useSession} from '@/components/AuthContext.tsx';
 import React from "react";
 import {router} from "expo-router";
 
@@ -15,7 +15,6 @@ export default function SignIn() {
     const handleSignIn = async () => {
         const success = await signIn(email, password);
         if (success) {
-            setError('');
             // Navigate to home screen
             router.replace('/');
         } else {

@@ -1,14 +1,39 @@
-import {StyleSheet} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {StyleSheet, View} from 'react-native';
+import MapView, {Polygon} from 'react-native-maps';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import {Text, View} from '@/components/Themed';
+import mapStyle from '@/mapStyle.json';
 
 export default function HomeScreen() {
+    const [region, setRegion] = useState({ // State to manage the region
+        latitude: 19.05436655381292,
+        longitude: -98.28302906826138,
+        latitudeDelta: 0.013936579011282646,
+        longitudeDelta: 0.00887308269739151,
+    });
+    const mapRef = useRef(null);
+    const handleRegionChange = (newRegion: {
+        latitude: number;
+        longitude: number;
+        latitudeDelta: number;
+        longitudeDelta: number;
+    }) => {
+        // Set the region information
+        setRegion(newRegion);
+    };
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Tab One</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-            <EditScreenInfo path="app/(tabs)/index.tsx"/>
+            <MapView
+                ref={mapRef}
+                style={styles.map}
+                customMapStyle={mapStyle}
+                initialRegion={region}
+                onRegionChangeComplete={handleRegionChange}
+                showsBuildings={false}
+                showsIndoors={false}
+                showsCompass={false}
+            />
         </View>
     );
 }
@@ -16,16 +41,8 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
+    map: {
+        flex: 1,
     },
 });
