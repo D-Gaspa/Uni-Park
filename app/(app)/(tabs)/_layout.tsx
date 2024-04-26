@@ -30,14 +30,16 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: 'Home',
+                    headerTitle: '',
                     tabBarIcon: ({color}) => <TabBarIcon name="home" color={color}/>,
+                    headerTransparent: true,
                     headerLeft: () => (
                         <Link href="/qr" asChild>
                             <Pressable>
                                 {({pressed}) => (
                                     <FontAwesome
                                         name="qrcode"
-                                        size={25}
+                                        size={40}
                                         color={Colors[colorScheme ?? 'light'].text}
                                         style={{marginLeft: 15, opacity: pressed ? 0.5 : 1}}
                                     />
@@ -50,7 +52,7 @@ export default function TabLayout() {
                             <Pressable>
                                 {({pressed}) => (
                                     <FontAwesome
-                                        name="info-circle"
+                                        name="question-circle-o"
                                         size={25}
                                         color={Colors[colorScheme ?? 'light'].text}
                                         style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
@@ -65,21 +67,69 @@ export default function TabLayout() {
                 name="ticket"
                 options={{
                     title: 'Ticket',
+                    // headerTitle: '',
                     tabBarIcon: ({color}) => <TabBarIcon name="ticket" color={color}/>,
+                    headerTransparent: true,
+                    headerRight: () => (
+                        <Link href="/faq" asChild>
+                            <Pressable>
+                                {({pressed}) => (
+                                    <FontAwesome
+                                        name="question-circle-o"
+                                        size={25}
+                                        color={Colors[colorScheme ?? 'light'].text}
+                                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
+                                    />
+                                )}
+                            </Pressable>
+                        </Link>
+                    ),
                 }}
             />
             <Tabs.Screen
                 name="report"
                 options={{
                     title: 'Report',
+                    headerTitle: 'Report Accident',
                     tabBarIcon: ({color}) => <TabBarIcon name="warning" color={color}/>,
+                    headerTransparent: true,
+                    headerRight: () => (
+                        <Link href="/faq" asChild>
+                            <Pressable>
+                                {({pressed}) => (
+                                    <FontAwesome
+                                        name="question-circle-o"
+                                        size={25}
+                                        color={Colors[colorScheme ?? 'light'].text}
+                                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
+                                    />
+                                )}
+                            </Pressable>
+                        </Link>
+                    ),
                 }}
             />
             <Tabs.Screen
                 name="settings"
                 options={{
                     title: 'Settings',
+                    // headerTitle: '',
                     tabBarIcon: ({color}) => <TabBarIcon name="cog" color={color}/>,
+                    headerTransparent: true,
+                    headerRight: () => (
+                        <Link href="/faq" asChild>
+                            <Pressable>
+                                {({pressed}) => (
+                                    <FontAwesome
+                                        name="question-circle-o"
+                                        size={25}
+                                        color={Colors[colorScheme ?? 'light'].text}
+                                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
+                                    />
+                                )}
+                            </Pressable>
+                        </Link>
+                    ),
                 }}
             />
         </Tabs>

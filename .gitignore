@@ -8,6 +8,9 @@ node_modules/
 dist/
 web-build/
 
+# IDE files
+.idea/
+
 # Yarn
 yarn.lock
 
