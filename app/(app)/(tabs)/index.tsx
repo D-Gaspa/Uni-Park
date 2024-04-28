@@ -1,10 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
-import {StyleSheet, useColorScheme, View} from "react-native";
+import {StyleSheet, View, Modal, Button, FlatList, TouchableOpacity, useColorScheme} from 'react-native';
 import MapView, {Marker, Polygon} from "react-native-maps";
 import {getParkingSpots, ParkingSpot} from "@/components/parkingSpots";
 import mapStyleDark from "@/map-style-dark-mode.json";
 import mapStyleLight from "@/map-style-light-mode.json";
 import {db} from "@/app/_layout";
+import FontAwesome from '@expo/vector-icons/FontAwesome5';
 
 export default function HomeScreen() {
     const colorScheme = useColorScheme();
@@ -16,6 +17,7 @@ export default function HomeScreen() {
         longitudeDelta: 0.00887308269739151,
     });
     const [parkingSpots, setParkingSpots] = useState<ParkingSpot[]>([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         if (!db) {
@@ -82,6 +84,31 @@ export default function HomeScreen() {
                     </React.Fragment>
                 ))}
             </MapView>
+            <TouchableOpacity style={styles.searchButton} onPress={() => setIsModalVisible(true)}>
+                <FontAwesome name="search-location" size={25} color='white'/>
+            </TouchableOpacity>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={() => setIsModalVisible(false)}
+            >
+                <TouchableOpacity style={styles.modalContainer} onPress={() => setIsModalVisible(false)}>
+                    <View style={styles.modalView}>
+                        <FlatList
+                            data={parkingSpots}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={({item}) => (
+                                <Button
+                                    title={`Parking Spot ${item.id}`}
+                                    onPress={() => handlePress(item.id)}
+                                />
+                            )}
+                        />
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+
         </View>
     );
 }
@@ -108,5 +135,34 @@ const styles = StyleSheet.create({
     },
     map: {
         flex: 1,
+    },
+    searchButton: {
+        position: 'absolute',
+        top: 40,
+        left: 65,
+        right: 65,
+        padding: 10,
+        borderRadius: 50,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)', // semi-transparent black
+        borderRadius: 30,
+        padding: 10,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

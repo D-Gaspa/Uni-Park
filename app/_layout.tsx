@@ -4,7 +4,7 @@ import {useColorScheme} from "@/components/useColorScheme";
 import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
 import {initializeAuth, getReactNativePersistence} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {firebaseConfig} from "@/firebaseConfig";
+import {firebaseConfig} from "@/firebase-config";
 import {initializeApp} from "firebase/app";
 import {Platform} from "react-native";
 import {getDatabase} from "firebase/database";
