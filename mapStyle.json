@@ -120,23 +120,6 @@
     ]
   },
   {
-    "featureType": "poi.business",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.business",
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "on"
-      }
-    ]
-  },
-  {
     "featureType": "poi.park",
     "elementType": "geometry.fill",
     "stylers": [
