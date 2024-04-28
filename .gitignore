@@ -11,11 +11,14 @@ web-build/
 # IDE files
 .idea/
 
+# Virtual env
+.venv/
+
 # Yarn
 yarn.lock
 
 # Firebase
-firebaseConfig.js
+firebase-config.js
 
 # Native
 *.orig.*
