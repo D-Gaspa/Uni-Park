@@ -1,11 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, useColorScheme, View} from "react-native";
 import MapView, {Marker, Polygon} from "react-native-maps";
 import {getParkingSpots, ParkingSpot} from "@/components/parkingSpots";
-import mapStyle from "@/mapStyle.json";
+import mapStyleDark from "@/map-style-dark-mode.json";
+import mapStyleLight from "@/map-style-light-mode.json";
 import {db} from "@/app/_layout";
 
 export default function HomeScreen() {
+    const colorScheme = useColorScheme();
     const mapRef = useRef<MapView>(null);
     const [region] = useState({
         latitude: 19.05436655381292,
@@ -43,10 +45,11 @@ export default function HomeScreen() {
     return (
         <View style={styles.container}>
             <MapView
-                customMapStyle={mapStyle}
+                customMapStyle={colorScheme === 'dark' ? mapStyleDark : mapStyleLight}
                 initialRegion={region}
                 onPress={handleMapPress}
                 ref={mapRef}
+                provider={"google"}
                 style={styles.map}
                 showsBuildings={false}
                 showsCompass={false}
