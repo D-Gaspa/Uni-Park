@@ -16,6 +16,7 @@ yarn.lock
 
 # Firebase
 firebaseConfig.js
+firebase-adminsdk.json
 
 # Native
 *.orig.*
