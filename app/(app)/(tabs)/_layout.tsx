@@ -1,8 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {Link, Tabs} from 'expo-router';
-import {Pressable} from 'react-native';
-
+import {Linking, Pressable} from 'react-native';
 import Colors from '@/constants/Colors';
 import {useColorScheme} from '@/components/useColorScheme';
 import {useClientOnlyValue} from '@/components/useClientOnlyValue';
@@ -35,18 +34,16 @@ export default function TabLayout() {
                         color={color}
                     />,
                     headerLeft: () => (
-                        <Link href="/qr" asChild>
-                            <Pressable>
-                                {({pressed}) => (
-                                    <FontAwesome
-                                        name="qrcode"
-                                        size={40}
-                                        color={Colors[colorScheme ?? 'light'].text}
-                                        style={{marginLeft: 15, opacity: pressed ? 0.5 : 1}}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
+                        <Pressable onPress={() => Linking.openURL('https://aplicaciones.udlap.mx/accesos/Login.aspx')}>
+                            {({pressed}) => (
+                                <FontAwesome
+                                    name="qrcode"
+                                    size={40}
+                                    color={Colors[colorScheme ?? 'light'].text}
+                                    style={{marginLeft: 15, opacity: pressed ? 0.5 : 1}}
+                                />
+                            )}
+                        </Pressable>
                     ),
                     headerRight: () => (
                         <Link href="/faq" asChild>

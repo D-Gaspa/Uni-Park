@@ -88,38 +88,6 @@ export function getParkingSpots() {
         {
             id: 6,
             coordinates: [
-                {latitude: 19.054211, longitude: -98.2867986},
-                {latitude: 19.0538186, longitude: -98.2870034},
-                {latitude: 19.053807, longitude: -98.2869976},
-                {latitude: 19.0537461, longitude: -98.2868683},
-                {latitude: 19.0537483, longitude: -98.2868452},
-                {latitude: 19.0537638, longitude: -98.2868294},
-                {latitude: 19.0541099, longitude: -98.2866594},
-                {latitude: 19.0541422, longitude: -98.2866568},
-                {latitude: 19.0541552, longitude: -98.2866621},
-                {latitude: 19.0542113, longitude: -98.286786},
-                {latitude: 19.054211, longitude: -98.2867986},
-            ],
-            totalSpots: 40,
-            availableSpots: 0,
-            selected: false,
-        },
-        {
-            id: 7,
-            coordinates: [
-                {latitude: 19.0551713, longitude: -98.2834625},
-                {latitude: 19.0555072, longitude: -98.2841466},
-                {latitude: 19.0553577, longitude: -98.2842243},
-                {latitude: 19.0550483, longitude: -98.2835323},
-                {latitude: 19.0551713, longitude: -98.2834625},
-            ],
-            totalSpots: 15,
-            availableSpots: 1,
-            selected: false,
-        },
-        {
-            id: 8,
-            coordinates: [
                 {latitude: 19.0526609, longitude: -98.2847851},
                 {latitude: 19.0526333, longitude: -98.2847291},
                 {latitude: 19.0526533, longitude: -98.2847063},
@@ -141,6 +109,38 @@ export function getParkingSpots() {
             totalSpots: 50,
             availableSpots: 2,
             selected: false,
-        }
+        },
+        {
+            id: 7,
+            coordinates: [
+                {latitude: 19.054211, longitude: -98.2867986},
+                {latitude: 19.0538186, longitude: -98.2870034},
+                {latitude: 19.053807, longitude: -98.2869976},
+                {latitude: 19.0537461, longitude: -98.2868683},
+                {latitude: 19.0537483, longitude: -98.2868452},
+                {latitude: 19.0537638, longitude: -98.2868294},
+                {latitude: 19.0541099, longitude: -98.2866594},
+                {latitude: 19.0541422, longitude: -98.2866568},
+                {latitude: 19.0541552, longitude: -98.2866621},
+                {latitude: 19.0542113, longitude: -98.286786},
+                {latitude: 19.054211, longitude: -98.2867986},
+            ],
+            totalSpots: 40,
+            availableSpots: 0,
+            selected: false,
+        },
+        {
+            id: 8,
+            coordinates: [
+                {latitude: 19.0551713, longitude: -98.2834625},
+                {latitude: 19.0555072, longitude: -98.2841466},
+                {latitude: 19.0553577, longitude: -98.2842243},
+                {latitude: 19.0550483, longitude: -98.2835323},
+                {latitude: 19.0551713, longitude: -98.2834625},
+            ],
+            totalSpots: 15,
+            availableSpots: 1,
+            selected: false,
+        },
     ]
 }

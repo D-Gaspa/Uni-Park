@@ -44,8 +44,16 @@ export default function HomeScreen() {
                     <React.Fragment key={spot.id}>
                         <Polygon
                             coordinates={spot.coordinates}
-                            fillColor={spot.selected ? 'rgba(30, 144, 255, 0.5)' : 'rgba(250, 250, 250, 0.5)'}
-                            strokeColor={spot.selected ? 'black' : 'black'}
+                            fillColor={
+                                spot.selected
+                                    ? spot.availableSpots === 0
+                                        ? 'rgba(12, 62, 102, 0.5)'
+                                        : 'rgba(30, 144, 255, 0.5)'
+                                    : spot.availableSpots === 0
+                                        ? 'rgba(50, 50, 50, 0.5)'
+                                        : 'rgba(250, 250, 250, 0.5)'
+                            }
+                            strokeColor={'black'}
                         />
                         <Marker
                             coordinate={getCenter(spot.coordinates)}

@@ -52,15 +52,6 @@ function AppLayoutNav() {
             <Stack>
                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
                 <Stack.Screen
-                    name="qr"
-                    options={{
-                        presentation: 'modal',
-                        title: 'QR Code',
-                        // headerTitle: '',
-                        headerTransparent: true,
-                    }}
-                />
-                <Stack.Screen
                     name="faq"
                     options={{
                         presentation: 'modal',
