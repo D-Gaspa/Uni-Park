@@ -1,8 +1,7 @@
-import {StyleSheet, Button} from 'react-native';
-
+import {Button, StyleSheet} from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import {Text, View} from '@/components/Themed';
-import {useSession} from '@/components/AuthContext.tsx';
+import {useSession} from '@/components/AuthContext';
 
 export default function SettingsScreen() {
     const {signOut} = useSession();
