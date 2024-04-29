@@ -138,7 +138,6 @@ export default function HomeScreen() {
                                                 ? "rgba(50, 50, 50, 0.5)"
                                                 : "rgba(250, 250, 250, 0.5)"
                             }
-                            onPress={() => handlePress(spot.id)}
                             strokeColor={"black"}
                         />
                         <Marker
