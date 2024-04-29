@@ -67,6 +67,23 @@ export default function HomeScreen() {
         setSelectedSpot(null);
     };
 
+    function getSpotColor(availableSpots: number, totalSpots: number): string {
+        const ratio = availableSpots / totalSpots;
+        let red, green;
+
+        if (ratio > 0.5) {
+            // Transition from green to yellow
+            red = Math.round(255 * (1 - (ratio - 0.5) * 2));
+            green = 255;
+        } else {
+            // Transition from yellow to red
+            red = 255;
+            green = Math.round(255 * ratio * 2);
+        }
+
+        return `rgba(${red}, ${green}, 0, 0.5)`;
+    }
+
     const handleLockPress = () => {
         if (selectedSpot) {
             const newIsClosed = !selectedSpot.isClosed;
@@ -123,28 +140,17 @@ export default function HomeScreen() {
                             coordinates={spot.coordinates}
                             fillColor={
                                 spot.isClosed
-                                    ? spot.selected
-                                        ? "rgba(255, 0, 0, 0.5)"
-                                        : "rgba(180, 0, 0, 0.5)"
-                                    : spot.teacherOnly
-                                        ? spot.selected
-                                            ? "rgba(30, 144, 255, 0.5)"
-                                            : "rgba(164, 238, 255, 0.5)"
-                                        : spot.selected
-                                            ? spot.availableSpots === 0
-                                                ? "rgba(12, 62, 102, 0.5)"
-                                                : "rgba(30, 144, 255, 0.5)"
-                                            : spot.availableSpots === 0
-                                                ? "rgba(50, 50, 50, 0.5)"
-                                                : "rgba(250, 250, 250, 0.5)"
+                                    ? "rgba(50, 50, 50, 0.2)"
+                                    : getSpotColor(spot.availableSpots, spot.totalSpots)
                             }
-                            strokeColor={"black"}
+                            strokeColor={
+                                spot.selected ? "white" : spot.availableSpots === 0 ? "rgba(255, 0, 0, 0.5)" : "black"}
                         />
                         <Marker
                             coordinate={getCenter(spot.coordinates)}
-                            image={require("@/assets/images/map-marker.png")}
+                            icon={require("@/assets/images/map-marker.png")}
                             onPress={() => handlePress(spot.id)}
-                            opacity={0.85}
+                            opacity={1}
                             title={spot.teacherOnly ? `Teacher Parking Spot ${spot.id}` : `Parking Spot ${spot.id}`}
                             description={spot.isClosed ? 'Closed' : `Available Spots: ${spot.availableSpots} / ${spot.totalSpots}`}
                         />
