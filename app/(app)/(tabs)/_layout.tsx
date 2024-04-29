@@ -6,6 +6,10 @@ import Colors from '@/constants/Colors';
 import {useColorScheme} from '@/components/useColorScheme';
 import {useClientOnlyValue} from '@/components/useClientOnlyValue';
 
+const constantStrings = {
+    url: 'https://aplicaciones.udlap.mx/accesos/Login.aspx',
+};
+
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name'];
     color: string;
@@ -34,7 +38,7 @@ export default function TabLayout() {
                         color={color}
                     />,
                     headerLeft: () => (
-                        <Pressable onPress={() => Linking.openURL('https://aplicaciones.udlap.mx/accesos/Login.aspx')}>
+                        <Pressable onPress={() => Linking.openURL(constantStrings.url)}>
                             {({pressed}) => (
                                 <FontAwesome
                                     name="qrcode"
@@ -65,7 +69,6 @@ export default function TabLayout() {
                 name="ticket"
                 options={{
                     title: 'Ticket',
-                    // headerTitle: '',
                     tabBarIcon: ({color}) => <TabBarIcon name="ticket" color={color}/>,
                     headerTransparent: true,
                     headerRight: () => (
@@ -111,7 +114,6 @@ export default function TabLayout() {
                 name="settings"
                 options={{
                     title: 'Settings',
-                    // headerTitle: '',
                     tabBarIcon: ({color}) => <TabBarIcon name="cog" color={color}/>,
                     headerTransparent: true,
                     headerRight: () => (

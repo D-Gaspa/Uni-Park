@@ -1,11 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
-import {StyleSheet, View, Modal, Button, FlatList, TouchableOpacity, useColorScheme} from 'react-native';
+import {Alert, Animated, StyleSheet, TouchableOpacity, useColorScheme, View} from 'react-native';
 import MapView, {Marker, Polygon} from "react-native-maps";
-import {getParkingSpots, ParkingSpot} from "@/components/parkingSpots";
+import {getParkingSpots, ParkingSpot, updateParkingSpot} from "@/components/parkingSpots";
 import mapStyleDark from "@/map-style-dark-mode.json";
 import mapStyleLight from "@/map-style-light-mode.json";
-import {db} from "@/app/_layout";
-import FontAwesome from '@expo/vector-icons/FontAwesome5';
+import {db} from "@/backend/firebaseInit";
+import {useSession} from "@/components/AuthContext";
+import {FontAwesome5} from "@expo/vector-icons";
 
 export default function HomeScreen() {
     const colorScheme = useColorScheme();
@@ -17,20 +18,40 @@ export default function HomeScreen() {
         longitudeDelta: 0.00887308269739151,
     });
     const [parkingSpots, setParkingSpots] = useState<ParkingSpot[]>([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const {role} = useSession();
+    const [selectedSpotId, setSelectedSpotId] = useState<number | null>(null);
+    const [selectedSpot, setSelectedSpot] = useState<ParkingSpot | null>(null);
+    const lockIconPosition = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         if (!db) {
             console.log('Database not initialized');
             return;
         }
-      return getParkingSpots(spots => {
-          const updatedSpots = spots.map(spot => ({...spot, selected: false}));
-          setParkingSpots(updatedSpots);
+        return getParkingSpots(role, spots => {
+            const updatedSpots = spots.map(spot => ({...spot, selected: false}));
+            setParkingSpots(updatedSpots);
         });
     }, [db]); // Only run effect if database object changes
 
-    const handlePress = (id: string) => {
+    useEffect(() => {
+        Animated.timing(lockIconPosition, {
+            toValue: selectedSpotId ? 0 : 100,
+            duration: 225,
+            useNativeDriver: true,
+        }).start();
+    }, [selectedSpotId]);
+
+    const lockIconStyle = {
+        transform: [{translateX: lockIconPosition}],
+    };
+
+    const handlePress = (id: number) => {
+        const spot = parkingSpots.find(spot => spot.id === id);
+        if (role === 'admin' && spot) {
+            setSelectedSpotId(id);
+            setSelectedSpot(spot);
+        }
         setParkingSpots((spots) =>
             spots.map((spot) =>
                 spot.id === id ? {...spot, selected: true} : {...spot, selected: false}
@@ -42,6 +63,45 @@ export default function HomeScreen() {
         setParkingSpots((spots) =>
             spots.map((spot) => ({...spot, selected: false}))
         );
+        setSelectedSpotId(null);
+        setSelectedSpot(null);
+    };
+
+    const handleLockPress = () => {
+        if (selectedSpot) {
+            const newIsClosed = !selectedSpot.isClosed;
+            Alert.alert(
+                'Confirm',
+                `Are you sure you want to ${newIsClosed ? 'close' : 'reopen'} this spot?`,
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            const spotIndex = parkingSpots.findIndex(spot => spot.id === selectedSpotId);
+                            updateParkingSpot(spotIndex, newIsClosed)
+                                .then(() => {
+                                    setParkingSpots((spots) =>
+                                        spots.map((spot) =>
+                                            spot.id === selectedSpotId ? {...spot, isClosed: newIsClosed} : spot
+                                        )
+                                    );
+                                    setSelectedSpot((prevSpot) => prevSpot ? {
+                                        ...prevSpot,
+                                        isClosed: newIsClosed
+                                    } : null);
+                                })
+                                .catch((error) => {
+                                    console.error('Failed to update parking spot:', error);
+                                });
+                        },
+                    },
+                ],
+            );
+        }
     };
 
     return (
@@ -62,13 +122,21 @@ export default function HomeScreen() {
                         <Polygon
                             coordinates={spot.coordinates}
                             fillColor={
-                                spot.selected
-                                    ? spot.availableSpots === 0
-                                        ? "rgba(12, 62, 102, 0.5)"
-                                        : "rgba(30, 144, 255, 0.5)"
-                                    : spot.availableSpots === 0
-                                        ? "rgba(50, 50, 50, 0.5)"
-                                        : "rgba(250, 250, 250, 0.5)"
+                                spot.isClosed
+                                    ? spot.selected
+                                        ? "rgba(255, 0, 0, 0.5)"
+                                        : "rgba(180, 0, 0, 0.5)"
+                                    : spot.teacherOnly
+                                        ? spot.selected
+                                            ? "rgba(30, 144, 255, 0.5)"
+                                            : "rgba(164, 238, 255, 0.5)"
+                                        : spot.selected
+                                            ? spot.availableSpots === 0
+                                                ? "rgba(12, 62, 102, 0.5)"
+                                                : "rgba(30, 144, 255, 0.5)"
+                                            : spot.availableSpots === 0
+                                                ? "rgba(50, 50, 50, 0.5)"
+                                                : "rgba(250, 250, 250, 0.5)"
                             }
                             onPress={() => handlePress(spot.id)}
                             strokeColor={"black"}
@@ -78,37 +146,23 @@ export default function HomeScreen() {
                             image={require("@/assets/images/map-marker.png")}
                             onPress={() => handlePress(spot.id)}
                             opacity={0.85}
-                            title={`Parking Spot ${spot.id}`}
-                            description={`Available Spots: ${spot.availableSpots} / ${spot.totalSpots}`}
+                            title={spot.teacherOnly ? `Teacher Parking Spot ${spot.id}` : `Parking Spot ${spot.id}`}
+                            description={spot.isClosed ? 'Closed' : `Available Spots: ${spot.availableSpots} / ${spot.totalSpots}`}
                         />
                     </React.Fragment>
                 ))}
             </MapView>
-            <TouchableOpacity style={styles.searchButton} onPress={() => setIsModalVisible(true)}>
-                <FontAwesome name="search-location" size={25} color='white'/>
-            </TouchableOpacity>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={() => setIsModalVisible(false)}
-            >
-                <TouchableOpacity style={styles.modalContainer} onPress={() => setIsModalVisible(false)}>
-                    <View style={styles.modalView}>
-                        <FlatList
-                            data={parkingSpots}
-                            keyExtractor={item => item.id.toString()}
-                            renderItem={({item}) => (
-                                <Button
-                                    title={`Parking Spot ${item.id}`}
-                                    onPress={() => handlePress(item.id)}
-                                />
-                            )}
+            {role === 'admin' && (
+                <Animated.View style={[styles.lockIcon, lockIconStyle]}>
+                    <TouchableOpacity onPress={handleLockPress}>
+                        <FontAwesome5
+                            name={selectedSpot ? (selectedSpot.isClosed ? 'unlock' : 'lock') : 'lock'}
+                            size={25}
+                            color={colorScheme === 'dark' ? 'white' : 'black'}
                         />
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-
+                    </TouchableOpacity>
+                </Animated.View>
+            )}
         </View>
     );
 }
@@ -136,33 +190,10 @@ const styles = StyleSheet.create({
     map: {
         flex: 1,
     },
-    searchButton: {
+    lockIcon: {
+        opacity: 0.75,
         position: 'absolute',
-        top: 40,
-        left: 65,
-        right: 65,
-        padding: 10,
-        borderRadius: 50,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)', // semi-transparent black
-        borderRadius: 30,
-        padding: 10,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        right: 19,
+        bottom: 70,
     },
 });
