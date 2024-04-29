@@ -38,6 +38,12 @@ yarn-error.*
 .DS_Store
 *.pem
 
+# Backend python
+backend/__pycache__/
+venv/
+backend/.venv/
+backend/stripe/.env
+
 # local env files
 .env*.local
 
