@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Button, Text } from 'react-native';
-import Payment from '../payment'; // Import the FaqModal component
 import { Link } from 'expo-router';
 
 const TicketScreen = () => {

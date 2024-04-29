@@ -1,17 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {useStorageState} from './useStorageState';
+import {getUserRole} from "@/backend/userRoles";
 
 const AuthContext = React.createContext<{
     signIn: (email: string, password: string) => Promise<boolean>;
     signOut: () => void;
     session?: string | null;
     isLoading: boolean;
+    role?: string | null;
 }>({
     signIn: () => Promise.resolve(false),
     signOut: () => null,
     session: null,
     isLoading: false,
+    role: null,
 });
 
 export function useSession() {
@@ -27,12 +30,18 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren<{}>) {
     const [[isLoading, session], setSession] = useStorageState('session');
     const auth = getAuth();
+    const [role, setRole] = useState<string | null>(null);
 
     const signIn = async (email: string, password: string): Promise<boolean> => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             setSession(user.uid);
+
+            // Set the user's role
+            const role = await getUserRole(user.uid);
+            setRole(role);
+
             return true;
         } catch (error) {
             console.error(error);
@@ -43,6 +52,7 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
 
     const signOut = () => {
         setSession(null);
+        setRole(null);
     };
 
     return (
@@ -52,6 +62,7 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
                 signOut,
                 session,
                 isLoading,
+                role,
             }}>
             {props.children}
         </AuthContext.Provider>

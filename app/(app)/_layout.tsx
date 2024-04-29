@@ -1,7 +1,7 @@
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Redirect, Stack} from 'expo-router';
 import {useColorScheme} from '@/components/useColorScheme';
-import {useSession} from '@/components/AuthContext.tsx';
+import {useSession} from '@/components/AuthContext';
 import {useFonts} from "expo-font";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {useEffect} from "react";

@@ -1,6 +1,6 @@
-import {StyleSheet, TextInput, TouchableOpacity, Linking} from 'react-native';
-import {Text, View, useThemeColor} from '@/components/Themed';
-import {useSession} from '@/components/AuthContext.tsx';
+import {Linking, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {Text, useThemeColor, View} from '@/components/Themed';
+import {useSession} from '@/components/AuthContext';
 import React from "react";
 import {router} from "expo-router";
 
