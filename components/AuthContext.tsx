@@ -10,6 +10,7 @@ export const AuthContext = React.createContext<{
     isLoading: boolean;
     role?: string | null;
     tickets?: string[] | null;
+    email: string | null;
 }>({
     signIn: () => Promise.resolve(false),
     signOut: () => null,
@@ -17,6 +18,7 @@ export const AuthContext = React.createContext<{
     isLoading: false,
     role: null,
     tickets: null,
+    email: null,
 });
 
 export function useSession() {
@@ -34,7 +36,15 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
     const auth = getAuth();
     const [[, role], setRole] = useStorageState<string>('role', '');
     const [[,tickets], setTickets] = useStorageState<string[]>('list_tickets', []); 
+    const [[, email], setEmail] = useStorageState('email', '');
 
+    const updateEmail = () => {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+            setEmail(user.email);
+        }
+    };
     const signIn = async (email: string, password: string): Promise<boolean> => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -46,6 +56,8 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
 
             const tickets = await getUserTickets(user.uid);
             setTickets(tickets);
+            // Update the email
+            updateEmail();
 
             return true;
         } catch (error) {
@@ -68,7 +80,8 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
                 session,
                 isLoading,
                 role,
-                tickets
+                tickets,
+                email,
             }}>
             {props.children}
         </AuthContext.Provider>
