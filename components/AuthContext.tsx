@@ -9,12 +9,14 @@ const AuthContext = React.createContext<{
     session?: string | null;
     isLoading: boolean;
     role?: string | null;
+    email: string | null;
 }>({
     signIn: () => Promise.resolve(false),
     signOut: () => null,
     session: null,
     isLoading: false,
     role: null,
+    email: null,
 });
 
 export function useSession() {
@@ -31,6 +33,15 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
     const [[isLoading, session], setSession] = useStorageState('session');
     const auth = getAuth();
     const [[, role], setRole] = useStorageState('role');
+    const [[, email], setEmail] = useStorageState('email');
+
+    const updateEmail = () => {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+            setEmail(user.email);
+        }
+    };
 
     const signIn = async (email: string, password: string): Promise<boolean> => {
         try {
@@ -41,6 +52,9 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
             // Set the user's role
             const role = await getUserRole(user.uid);
             setRole(role);
+
+            // Update the email
+            updateEmail();
 
             return true;
         } catch (error) {
@@ -62,6 +76,7 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
                 session,
                 isLoading,
                 role,
+                email,
             }}>
             {props.children}
         </AuthContext.Provider>
