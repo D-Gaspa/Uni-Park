@@ -1,20 +1,22 @@
 import React from 'react';
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {useStorageState} from './useStorageState';
-import {getUserRole} from "@/backend/userRoles";
+import {getUserRole, getUserTickets} from "@/backend/userRoles";
 
-const AuthContext = React.createContext<{
+export const AuthContext = React.createContext<{
     signIn: (email: string, password: string) => Promise<boolean>;
     signOut: () => void;
     session?: string | null;
     isLoading: boolean;
     role?: string | null;
+    tickets?: string[] | null;
 }>({
     signIn: () => Promise.resolve(false),
     signOut: () => null,
     session: null,
     isLoading: false,
     role: null,
+    tickets: null,
 });
 
 export function useSession() {
@@ -28,9 +30,10 @@ export function useSession() {
 }
 
 export function SessionProvider(props: React.PropsWithChildren<{}>) {
-    const [[isLoading, session], setSession] = useStorageState('session');
+    const [[isLoading, session], setSession] = useStorageState<string>('session', '');
     const auth = getAuth();
-    const [[, role], setRole] = useStorageState('role');
+    const [[, role], setRole] = useStorageState<string>('role', '');
+    const [[,tickets], setTickets] = useStorageState<string[]>('list_tickets', []); 
 
     const signIn = async (email: string, password: string): Promise<boolean> => {
         try {
@@ -38,9 +41,11 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
             const user = userCredential.user;
             setSession(user.uid);
 
-            // Set the user's role
             const role = await getUserRole(user.uid);
             setRole(role);
+
+            const tickets = await getUserTickets(user.uid);
+            setTickets(tickets);
 
             return true;
         } catch (error) {
@@ -52,6 +57,7 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
     const signOut = () => {
         setSession(null);
         setRole(null);
+        setTickets([]);
     };
 
     return (
@@ -62,6 +68,7 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
                 session,
                 isLoading,
                 role,
+                tickets
             }}>
             {props.children}
         </AuthContext.Provider>
