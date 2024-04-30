@@ -141,10 +141,12 @@ export default function HomeScreen() {
                             fillColor={
                                 spot.isClosed
                                     ? "rgba(50, 50, 50, 0.2)"
-                                    : getSpotColor(spot.availableSpots, spot.totalSpots)
+                                    : spot.availableSpots === 0
+                                        ? "rgba(255, 0, 0, 0.2)"
+                                        : getSpotColor(spot.availableSpots, spot.totalSpots)
                             }
                             strokeColor={
-                                spot.selected ? "white" : spot.availableSpots === 0 ? "rgba(255, 0, 0, 0.5)" : "black"}
+                                spot.selected ? "white" : "black"}
                         />
                         <Marker
                             coordinate={getCenter(spot.coordinates)}
