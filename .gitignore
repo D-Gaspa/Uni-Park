@@ -18,6 +18,8 @@ web-build/
 yarn.lock
 
 # Firebase
+firebaseConfig.js
+firebase-adminsdk.json
 firebase-config.js
 
 # Native
@@ -39,6 +41,12 @@ yarn-error.*
 # macOS
 .DS_Store
 *.pem
+
+# Backend python
+backend/__pycache__/
+venv/
+backend/.venv/
+backend/stripe/.env
 
 # local env files
 .env*.local
