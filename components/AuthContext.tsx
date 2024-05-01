@@ -1,15 +1,14 @@
 import React from 'react';
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {useStorageState} from './useStorageState';
-import {getUserRole, getUserTickets} from "@/backend/userRoles";
+import {getUserRole} from "@/backend/userRoles";
 
 export const AuthContext = React.createContext<{
-    signIn: (email: string, password: string) => Promise<boolean>;
+    signIn: (email: string, password: string) => Promise<boolean>,
     signOut: () => void;
     session?: string | null;
     isLoading: boolean;
     role?: string | null;
-    tickets?: string[] | null;
     email: string | null;
 }>({
     signIn: () => Promise.resolve(false),
@@ -17,7 +16,6 @@ export const AuthContext = React.createContext<{
     session: null,
     isLoading: false,
     role: null,
-    tickets: null,
     email: null,
 });
 
@@ -32,11 +30,10 @@ export function useSession() {
 }
 
 export function SessionProvider(props: React.PropsWithChildren<{}>) {
-    const [[isLoading, session], setSession] = useStorageState<string>('session', '');
+    const [[isLoading, session], setSession] = useStorageState('session');
     const auth = getAuth();
-    const [[, role], setRole] = useStorageState<string>('role', '');
-    const [[,tickets], setTickets] = useStorageState<string[]>('list_tickets', []); 
-    const [[, email], setEmail] = useStorageState('email', '');
+    const [[, role], setRole] = useStorageState('role');
+    const [[, email], setEmail] = useStorageState('email');
 
     const updateEmail = () => {
         const auth = getAuth();
@@ -54,8 +51,6 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
             const role = await getUserRole(user.uid);
             setRole(role);
 
-            const tickets = await getUserTickets(user.uid);
-            setTickets(tickets);
             // Update the email
             updateEmail();
 
@@ -69,7 +64,6 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
     const signOut = () => {
         setSession(null);
         setRole(null);
-        setTickets([]);
     };
 
     return (
@@ -80,7 +74,6 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
                 session,
                 isLoading,
                 role,
-                tickets,
                 email,
             }}>
             {props.children}
