@@ -40,7 +40,6 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
     }
   }
 }

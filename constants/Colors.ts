@@ -1,8 +1,8 @@
 export const colors = {
     tintColorLight: '#2f95dc',
     tintColorDark: '#fff',
-    blurple: '#635BFF',
-    blurple_dark: '#5851DF',
+    blue_purple: '#635BFF',
+    blue_purple_dark: '#5851DF',
     light_gray: '#F6F9FC',
     dark_gray: '#425466',
     slate: '#0A2540',
