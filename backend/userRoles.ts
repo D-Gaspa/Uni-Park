@@ -1,5 +1,5 @@
 import {doc, getDoc} from "firebase/firestore";
-import {userRoles} from "@/backend/firebaseInit";
+import {userRoles} from "@/firebase-config";
 
 export async function getUserRole(user: string) {
     const docRef = doc(userRoles, "user-roles", user);

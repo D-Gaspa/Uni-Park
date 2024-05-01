@@ -1,5 +1,5 @@
 import {onValue, ref, update} from "firebase/database";
-import {db} from '@/backend/firebaseInit';
+import {db} from '@/firebase-config';
 
 interface Coordinate {
     latitude: number;
@@ -25,7 +25,6 @@ export function getParkingSpots(
     role: string | null | undefined,
     setParkingSpots: (spots: ParkingSpot[]) => void,
 ): void {
-    // removed the useSession hook from here
     const spotsRef = ref(db, '/spots/');
     onValue(spotsRef, snapshot => {
         const spotsArray: ParkingSpot[] = [];

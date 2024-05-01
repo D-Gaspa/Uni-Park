@@ -4,7 +4,7 @@ import MapView, {Marker, Polygon} from "react-native-maps";
 import {getParkingSpots, ParkingSpot, updateParkingSpot,} from "@/components/parkingSpots";
 import mapStyleDark from "@/map-style-dark-mode.json";
 import mapStyleLight from "@/map-style-light-mode.json";
-import {db} from "@/backend/firebaseInit";
+import {db} from "@/firebase-config";
 import {useSession} from "@/components/AuthContext";
 import {FontAwesome5} from "@expo/vector-icons";
 

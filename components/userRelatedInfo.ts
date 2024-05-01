@@ -1,24 +1,11 @@
 import {onValue, ref, set} from "firebase/database";
-import {db} from "@/backend/firebaseInit";
-import {getAuth} from "firebase/auth";
 import {useEffect, useState} from "react";
+import {auth, db} from "@/firebase-config";
 
-const auth = getAuth();
 const user = auth.currentUser?.uid;
 
 interface TicketTypes {
     [key: string]: string[];
-}
-
-export async function deleteUserTicket(type: string) {
-    const ticketRef = ref(db, `users/${user}/tickets/${type}`);
-
-    try {
-        //await remove(ticketRef);
-        console.log(`Successfully deleted the ticket of type: ${type}`);
-    } catch (error) {
-        console.error("Failed to delete ticket:", error);
-    }
 }
 
 export async function loadUserTicket(ticket: string, type: string) {
@@ -66,15 +53,4 @@ export function useUserTickets() {
     }, []);
 
     return tickets;
-}
-
-export async function getUserCurrency() {
-    const currencyRef = ref(db, `users/${user}/currency/`);
-    let currency: string | null = null;
-
-    onValue(currencyRef, (snapshot) => {
-        currency = snapshot.val();
-    });
-
-    return currency;
 }
