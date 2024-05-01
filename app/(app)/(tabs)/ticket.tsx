@@ -142,7 +142,7 @@ const TicketScreen = () => {
           </View>
         ) : (
           // If there are tickets, render them
-          <PagerView style={styles.pagerView} initialPage={0}>
+          <PagerView style={styles.pagerView} initialPage={0} >
             {Object.entries(usertickets).map(
               ([ticketType, ticketIds], index) => (
                 <View key={index} style={styles.page}>
