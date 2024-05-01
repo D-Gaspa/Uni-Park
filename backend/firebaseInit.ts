@@ -7,7 +7,7 @@ import {firebaseConfig} from "@/firebase-config";
 import {Firestore, getFirestore} from "firebase/firestore";
 
 let app: FirebaseApp;
-let db : Database;
+let db: Database;
 let userRoles: Firestore;
 
 export function initializeFirebase() {

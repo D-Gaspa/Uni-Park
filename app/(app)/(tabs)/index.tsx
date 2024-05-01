@@ -1,23 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Alert,
-  Animated,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
-import MapView, { Marker, Polygon } from "react-native-maps";
-import {
-  getParkingSpots,
-  ParkingSpot,
-  updateParkingSpot,
-} from "@/components/parkingSpots";
+import React, {useEffect, useRef, useState} from "react";
+import {Alert, Animated, StyleSheet, TouchableOpacity, useColorScheme, View,} from "react-native";
+import MapView, {Marker, Polygon} from "react-native-maps";
+import {getParkingSpots, ParkingSpot, updateParkingSpot,} from "@/components/parkingSpots";
 import mapStyleDark from "@/map-style-dark-mode.json";
 import mapStyleLight from "@/map-style-light-mode.json";
-import { db } from "@/backend/firebaseInit";
-import { useSession } from "@/components/AuthContext";
-import { FontAwesome5 } from "@expo/vector-icons";
+import {db} from "@/backend/firebaseInit";
+import {useSession} from "@/components/AuthContext";
+import {FontAwesome5} from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -29,7 +18,7 @@ export default function HomeScreen() {
     longitudeDelta: 0.00887308269739151,
   });
   const [parkingSpots, setParkingSpots] = useState<ParkingSpot[]>([]);
-  const { role } = useSession();
+  const {role} = useSession();
   const [selectedSpotId, setSelectedSpotId] = useState<number | null>(null);
   const [selectedSpot, setSelectedSpot] = useState<ParkingSpot | null>(null);
   const lockIconPosition = useRef(new Animated.Value(0)).current;
@@ -40,7 +29,7 @@ export default function HomeScreen() {
       return;
     }
     return getParkingSpots(role, (spots) => {
-      const updatedSpots = spots.map((spot) => ({ ...spot, selected: false }));
+      const updatedSpots = spots.map((spot) => ({...spot, selected: false}));
       setParkingSpots(updatedSpots);
     });
   }, [db]); // Only run effect if database object changes
@@ -54,7 +43,7 @@ export default function HomeScreen() {
   }, [selectedSpotId]);
 
   const lockIconStyle = {
-    transform: [{ translateX: lockIconPosition }],
+    transform: [{translateX: lockIconPosition}],
   };
 
   const handlePress = (id: number) => {
@@ -64,17 +53,15 @@ export default function HomeScreen() {
       setSelectedSpot(spot);
     }
     setParkingSpots((spots) =>
-      spots.map((spot) =>
-        spot.id === id
-          ? { ...spot, selected: true }
-          : { ...spot, selected: false }
-      )
+        spots.map((spot) =>
+            spot.id === id ? {...spot, selected: true} : {...spot, selected: false}
+        )
     );
   };
 
   const handleMapPress = () => {
     setParkingSpots((spots) =>
-      spots.map((spot) => ({ ...spot, selected: false }))
+        spots.map((spot) => ({...spot, selected: false}))
     );
     setSelectedSpotId(null);
     setSelectedSpot(null);
@@ -101,45 +88,45 @@ export default function HomeScreen() {
     if (selectedSpot) {
       const newIsClosed = !selectedSpot.isClosed;
       Alert.alert(
-        "Confirm",
-        `Are you sure you want to ${
-          newIsClosed ? "close" : "reopen"
-        } this spot?`,
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
-          {
-            text: "OK",
-            onPress: () => {
-              const spotIndex = parkingSpots.findIndex(
-                (spot) => spot.id === selectedSpotId
-              );
-              updateParkingSpot(spotIndex, newIsClosed)
-                .then(() => {
-                  setParkingSpots((spots) =>
-                    spots.map((spot) =>
-                      spot.id === selectedSpotId
-                        ? { ...spot, isClosed: newIsClosed }
-                        : spot
-                    )
-                  );
-                  setSelectedSpot((prevSpot) =>
-                    prevSpot
-                      ? {
-                          ...prevSpot,
-                          isClosed: newIsClosed,
-                        }
-                      : null
-                  );
-                })
-                .catch((error) => {
-                  console.error("Failed to update parking spot:", error);
-                });
+          "Confirm",
+          `Are you sure you want to ${
+              newIsClosed ? "close" : "reopen"
+          } this spot?`,
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
             },
-          },
-        ]
+            {
+              text: "OK",
+              onPress: () => {
+                const spotIndex = parkingSpots.findIndex(
+                    (spot) => spot.id === selectedSpotId
+                );
+                updateParkingSpot(spotIndex, newIsClosed)
+                    .then(() => {
+                      setParkingSpots((spots) =>
+                          spots.map((spot) =>
+                              spot.id === selectedSpotId
+                                  ? {...spot, isClosed: newIsClosed}
+                                  : spot
+                          )
+                      );
+                      setSelectedSpot((prevSpot) =>
+                          prevSpot
+                              ? {
+                                ...prevSpot,
+                                isClosed: newIsClosed,
+                              }
+                              : null
+                      );
+                    })
+                    .catch((error) => {
+                      console.error("Failed to update parking spot:", error);
+                    });
+              },
+            },
+          ]
       );
     }
   };
@@ -165,7 +152,7 @@ export default function HomeScreen() {
                                 spot.isClosed
                                     ? "rgba(50, 50, 50, 0.2)"
                                     : spot.availableSpots === 0
-                                        ? "rgba(255, 0, 0, 0.2)"
+                                        ? "rgb(116, 11, 11, 0.5)"
                                         : getSpotColor(spot.availableSpots, spot.totalSpots)
                             }
                             strokeColor={
