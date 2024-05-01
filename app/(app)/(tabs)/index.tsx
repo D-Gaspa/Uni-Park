@@ -144,74 +144,57 @@ export default function HomeScreen() {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <MapView
-        customMapStyle={colorScheme === "dark" ? mapStyleDark : mapStyleLight}
-        initialRegion={region}
-        onPress={handleMapPress}
-        ref={mapRef}
-        provider={"google"}
-        style={styles.map}
-        showsBuildings={false}
-        showsCompass={false}
-        showsIndoors={false}
-      >
-        {parkingSpots.map((spot) => (
-          <React.Fragment key={spot.id}>
-            <Polygon
-              coordinates={spot.coordinates}
-              fillColor={
-                spot.isClosed
-                  ? "rgba(50, 50, 50, 0.2)"
-                  : spot.availableSpots === 0
-                  ? "rgba(255, 0, 0, 0.2)"
-                  : getSpotColor(spot.availableSpots, spot.totalSpots)
-              }
-              strokeColor={
-                spot.selected
-                  ? "white"
-                  : "black"
-              }
-            />
-            <Marker
-              coordinate={getCenter(spot.coordinates)}
-              icon={require("@/assets/images/map-marker.png")}
-              onPress={() => handlePress(spot.id)}
-              opacity={1}
-              title={
-                spot.teacherOnly
-                  ? `Teacher Parking Spot ${spot.id}`
-                  : `Parking Spot ${spot.id}`
-              }
-              description={
-                spot.isClosed
-                  ? "Closed"
-                  : `Available Spots: ${spot.availableSpots} / ${spot.totalSpots}`
-              }
-            />
-          </React.Fragment>
-        ))}
-      </MapView>
-      {role === "admin" && (
-        <Animated.View style={[styles.lockIcon, lockIconStyle]}>
-          <TouchableOpacity onPress={handleLockPress}>
-            <FontAwesome5
-              name={
-                selectedSpot
-                  ? selectedSpot.isClosed
-                    ? "unlock"
-                    : "lock"
-                  : "lock"
-              }
-              size={25}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-          </TouchableOpacity>
-        </Animated.View>
-      )}
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <MapView
+                customMapStyle={colorScheme === 'dark' ? mapStyleDark : mapStyleLight}
+                initialRegion={region}
+                onPress={handleMapPress}
+                ref={mapRef}
+                provider={"google"}
+                style={styles.map}
+                showsBuildings={false}
+                showsCompass={false}
+                showsIndoors={false}
+            >
+                {parkingSpots.map((spot) => (
+                    <React.Fragment key={spot.id}>
+                        <Polygon
+                            coordinates={spot.coordinates}
+                            fillColor={
+                                spot.isClosed
+                                    ? "rgba(50, 50, 50, 0.2)"
+                                    : spot.availableSpots === 0
+                                        ? "rgba(255, 0, 0, 0.2)"
+                                        : getSpotColor(spot.availableSpots, spot.totalSpots)
+                            }
+                            strokeColor={
+                                spot.selected ? "white" : "black"}
+                        />
+                        <Marker
+                            coordinate={getCenter(spot.coordinates)}
+                            icon={require("@/assets/images/map-marker.png")}
+                            onPress={() => handlePress(spot.id)}
+                            opacity={1}
+                            title={spot.teacherOnly ? `Teacher Parking Spot ${spot.id}` : `Parking Spot ${spot.id}`}
+                            description={spot.isClosed ? 'Closed' : `Available Spots: ${spot.availableSpots} / ${spot.totalSpots}`}
+                        />
+                    </React.Fragment>
+                ))}
+            </MapView>
+            {role === 'admin' && (
+                <Animated.View style={[styles.lockIcon, lockIconStyle]}>
+                    <TouchableOpacity onPress={handleLockPress}>
+                        <FontAwesome5
+                            name={selectedSpot ? (selectedSpot.isClosed ? 'unlock' : 'lock') : 'lock'}
+                            size={25}
+                            color={colorScheme === 'dark' ? 'white' : 'black'}
+                        />
+                    </TouchableOpacity>
+                </Animated.View>
+            )}
+        </View>
+    );
 }
 
 function getCenter(coordinates: any[]) {
