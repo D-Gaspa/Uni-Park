@@ -3,8 +3,8 @@ import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {useStorageState} from './useStorageState';
 import {getUserRole} from "@/backend/userRoles";
 
-const AuthContext = React.createContext<{
-    signIn: (email: string, password: string) => Promise<boolean>;
+export const AuthContext = React.createContext<{
+    signIn: (email: string, password: string) => Promise<boolean>,
     signOut: () => void;
     session?: string | null;
     isLoading: boolean;
@@ -42,14 +42,12 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
             setEmail(user.email);
         }
     };
-
     const signIn = async (email: string, password: string): Promise<boolean> => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             setSession(user.uid);
 
-            // Set the user's role
             const role = await getUserRole(user.uid);
             setRole(role);
 
