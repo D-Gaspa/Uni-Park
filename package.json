@@ -24,6 +24,7 @@
     "@stripe/stripe-react-native": "^0.35.1",
     "body-parser": "^1.20.2",
     "expo": "^50.0.17",
+    "expo-checkbox": "^2.7.0",
     "expo-font": "~11.10.3",
     "expo-image-picker": "^14.7.1",
     "expo-linking": "~6.2.2",
