@@ -9,127 +9,118 @@ import {useSession} from "@/components/AuthContext";
 import {FontAwesome5} from "@expo/vector-icons";
 
 export default function HomeScreen() {
-  const colorScheme = useColorScheme();
-  const mapRef = useRef<MapView>(null);
-  const [region] = useState({
-    latitude: 19.05436655381292,
-    longitude: -98.28302906826138,
-    latitudeDelta: 0.013936579011282646,
-    longitudeDelta: 0.00887308269739151,
-  });
-  const [parkingSpots, setParkingSpots] = useState<ParkingSpot[]>([]);
-  const {role} = useSession();
-  const [selectedSpotId, setSelectedSpotId] = useState<number | null>(null);
-  const [selectedSpot, setSelectedSpot] = useState<ParkingSpot | null>(null);
-  const lockIconPosition = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (!db) {
-      console.log("Database not initialized");
-      return;
-    }
-    return getParkingSpots(role, (spots) => {
-      const updatedSpots = spots.map((spot) => ({...spot, selected: false}));
-      setParkingSpots(updatedSpots);
+    const colorScheme = useColorScheme();
+    const mapRef = useRef<MapView>(null);
+    const [region] = useState({
+        latitude: 19.05436655381292,
+        longitude: -98.28302906826138,
+        latitudeDelta: 0.013936579011282646,
+        longitudeDelta: 0.00887308269739151,
     });
-  }, [db]); // Only run effect if database object changes
+    const [parkingSpots, setParkingSpots] = useState<ParkingSpot[]>([]);
+    const {role} = useSession();
+    const [selectedSpotId, setSelectedSpotId] = useState<number | null>(null);
+    const [selectedSpot, setSelectedSpot] = useState<ParkingSpot | null>(null);
+    const lockIconPosition = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    Animated.timing(lockIconPosition, {
-      toValue: selectedSpotId ? 0 : 100,
-      duration: 225,
-      useNativeDriver: true,
-    }).start();
-  }, [selectedSpotId]);
+    useEffect(() => {
+        if (!db) {
+            console.log("Database not initialized");
+            return;
+        }
+        return getParkingSpots(role, (spots) => {
+            const updatedSpots = spots.map((spot) => ({...spot, selected: false}));
+            setParkingSpots(updatedSpots);
+        });
+    }, [db]); // Only run effect if database object changes
 
-  const lockIconStyle = {
-    transform: [{translateX: lockIconPosition}],
-  };
+    useEffect(() => {
+        Animated.timing(lockIconPosition, {
+            toValue: selectedSpotId ? 0 : 100,
+            duration: 225,
+            useNativeDriver: true,
+        }).start();
+    }, [selectedSpotId]);
 
-  const handlePress = (id: number) => {
-    const spot = parkingSpots.find((spot) => spot.id === id);
-    if (role === "admin" && spot) {
-      setSelectedSpotId(id);
-      setSelectedSpot(spot);
+    const lockIconStyle = {
+        transform: [{translateX: lockIconPosition}],
+    };
+
+    const handlePress = (id: number) => {
+        const spot = parkingSpots.find((spot) => spot.id === id);
+        if (role === "admin" && spot) {
+            setSelectedSpotId(id);
+            setSelectedSpot(spot);
+        }
+        setParkingSpots((spots) =>
+            spots.map((spot) =>
+                spot.id === id ? {...spot, selected: true} : {...spot, selected: false}
+            )
+        );
+    };
+
+    const handleMapPress = () => {
+        setParkingSpots((spots) =>
+            spots.map((spot) => ({...spot, selected: false}))
+        );
+        setSelectedSpotId(null);
+        setSelectedSpot(null);
+    };
+
+    function getSpotColor(availableSpots: number, totalSpots: number): string {
+        const ratio = availableSpots / totalSpots;
+        let red, green;
+
+        if (ratio > 0.5) {
+            // Transition from green to yellow
+            red = Math.round(255 * (1 - (ratio - 0.5) * 2));
+            green = 255;
+        } else {
+            // Transition from yellow to red
+            red = 255;
+            green = Math.round(255 * ratio * 2);
+        }
+
+        return `rgba(${red}, ${green}, 0, 0.5)`;
     }
-    setParkingSpots((spots) =>
-        spots.map((spot) =>
-            spot.id === id ? {...spot, selected: true} : {...spot, selected: false}
-        )
-    );
-  };
 
-  const handleMapPress = () => {
-    setParkingSpots((spots) =>
-        spots.map((spot) => ({...spot, selected: false}))
-    );
-    setSelectedSpotId(null);
-    setSelectedSpot(null);
-  };
-
-  function getSpotColor(availableSpots: number, totalSpots: number): string {
-    const ratio = availableSpots / totalSpots;
-    let red, green;
-
-    if (ratio > 0.5) {
-      // Transition from green to yellow
-      red = Math.round(255 * (1 - (ratio - 0.5) * 2));
-      green = 255;
-    } else {
-      // Transition from yellow to red
-      red = 255;
-      green = Math.round(255 * ratio * 2);
-    }
-
-    return `rgba(${red}, ${green}, 0, 0.5)`;
-  }
-
-  const handleLockPress = () => {
-    if (selectedSpot) {
-      const newIsClosed = !selectedSpot.isClosed;
-      Alert.alert(
-          "Confirm",
-          `Are you sure you want to ${
-              newIsClosed ? "close" : "reopen"
-          } this spot?`,
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-            {
-              text: "OK",
-              onPress: () => {
-                const spotIndex = parkingSpots.findIndex(
-                    (spot) => spot.id === selectedSpotId
-                );
-                updateParkingSpot(spotIndex, newIsClosed)
-                    .then(() => {
-                      setParkingSpots((spots) =>
-                          spots.map((spot) =>
-                              spot.id === selectedSpotId
-                                  ? {...spot, isClosed: newIsClosed}
-                                  : spot
-                          )
-                      );
-                      setSelectedSpot((prevSpot) =>
-                          prevSpot
-                              ? {
-                                ...prevSpot,
-                                isClosed: newIsClosed,
-                              }
-                              : null
-                      );
-                    })
-                    .catch((error) => {
-                      console.error("Failed to update parking spot:", error);
-                    });
-              },
-            },
-          ]
-      );
-    }
-  };
+    const handleLockPress = () => {
+        if (selectedSpot) {
+            const newIsClosed = !selectedSpot.isClosed;
+            Alert.alert(
+                "Confirm",
+                `Are you sure you want to ${newIsClosed ? "close" : "reopen"} this spot?`,
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel",
+                    },
+                    {
+                        text: "OK",
+                        onPress: () => {
+                            const spotIndex = parkingSpots.findIndex(
+                                (spot) => spot.id === selectedSpotId
+                            );
+                            updateParkingSpot(spotIndex, newIsClosed)
+                                .then(() => {
+                                    setParkingSpots((spots) =>
+                                        spots.map((spot) =>
+                                            spot.id === selectedSpotId ? {...spot, isClosed: newIsClosed} : spot
+                                        )
+                                    );
+                                    setSelectedSpot((prevSpot) =>
+                                        prevSpot ? {...prevSpot, isClosed: newIsClosed} : null
+                                    );
+                                })
+                                .catch((error) => {
+                                    console.error("Failed to update parking spot:", error);
+                                });
+                        },
+                    },
+                ]
+            );
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -185,32 +176,32 @@ export default function HomeScreen() {
 }
 
 function getCenter(coordinates: any[]) {
-  let x = coordinates.map((coordinates) => coordinates.latitude);
-  let y = coordinates.map((coordinates) => coordinates.longitude);
+    let x = coordinates.map((coordinates) => coordinates.latitude);
+    let y = coordinates.map((coordinates) => coordinates.longitude);
 
-  let minX = Math.min.apply(null, x);
-  let maxX = Math.max.apply(null, x);
+    let minX = Math.min.apply(null, x);
+    let maxX = Math.max.apply(null, x);
 
-  let minY = Math.min.apply(null, y);
-  let maxY = Math.max.apply(null, y);
+    let minY = Math.min.apply(null, y);
+    let maxY = Math.max.apply(null, y);
 
-  return {
-    latitude: (minX + maxX) / 2,
-    longitude: (minY + maxY) / 2,
-  };
+    return {
+        latitude: (minX + maxX) / 2,
+        longitude: (minY + maxY) / 2,
+    };
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-  lockIcon: {
-    opacity: 0.75,
-    position: "absolute",
-    right: 19,
-    bottom: 70,
-  },
+    container: {
+        flex: 1,
+    },
+    map: {
+        flex: 1,
+    },
+    lockIcon: {
+        opacity: 0.75,
+        position: "absolute",
+        right: 19,
+        bottom: 70,
+    },
 });
