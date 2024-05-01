@@ -146,7 +146,13 @@ const TicketScreen = () => {
             {Object.entries(usertickets).map(
               ([ticketType, ticketIds], index) => (
                 <View key={index} style={styles.page}>
-                  <Text style={styles.title}>{ticketType}</Text>
+                  <Text
+                    style={{
+                      color: colorScheme === "light" ? "black" : "white",
+                    }}
+                  >
+                    {ticketType}
+                  </Text>
                   {ticketIds.map((ticketId, subIndex) => (
                     <QRCode key={subIndex} value={ticketId} size={200} />
                   ))}
