@@ -2,13 +2,13 @@ import {onValue, ref, set} from "firebase/database";
 import {useEffect, useState} from "react";
 import {auth, db} from "@/firebase-config";
 
-const user = auth.currentUser?.uid;
-
 interface TicketTypes {
     [key: string]: string[];
 }
 
 export async function loadUserTicket(ticket: string, type: string) {
+    const user = auth.currentUser?.uid;
+
     const ticketsRef = ref(db, `users/${user}/tickets/${type}`);
 
     try {
@@ -19,6 +19,8 @@ export async function loadUserTicket(ticket: string, type: string) {
 }
 
 export async function checkExistingTicket(type: string) {
+    const user = auth.currentUser?.uid;
+
     const ticketRef = ref(db, `users/${user}/tickets/${type}`);
     let ticketExists = false;
 
@@ -30,6 +32,7 @@ export async function checkExistingTicket(type: string) {
 }
 
 export function useUserTickets() {
+    const user = auth.currentUser?.uid;
     const [tickets, setTickets] = useState<TicketTypes | null>(null);
 
     useEffect(() => {
