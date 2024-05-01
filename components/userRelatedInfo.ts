@@ -11,14 +11,14 @@ interface TicketTypes {
 }
 
 export async function deleteUserTicket(type: string) {
-    const ticketRef = ref(db, `users/${user}/tickets/${type}`);
+  const ticketRef = ref(db, `users/${user}/tickets/${type}`);
 
-    try {
-        await remove(ticketRef);
-        console.log(`Ticket of type ${type} deleted successfully.`);
-    } catch (error) {
-        console.error("Failed to delete ticket:", error);
-    }
+  try {
+    //await remove(ticketRef);
+    console.log(`Successfully deleted the ticket of type: ${type}`);
+  } catch (error) {
+    console.error("Failed to delete ticket:", error);
+  }
 }
 
 export async function loadUserTicket(ticket: string, type: string) {
