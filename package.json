@@ -45,6 +45,7 @@
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-svg": "^15.2.0",
+    "react-native-viewpager": "^0.2.13",
     "react-native-web": "~0.19.6",
     "stripe": "^15.4.0"
   },
