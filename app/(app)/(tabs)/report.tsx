@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
     Alert,
     Button,
@@ -14,10 +14,20 @@ import {
     View
 } from "react-native";
 import Checkbox from "expo-checkbox";
-import { Picker } from "@react-native-picker/picker";
+import {Picker} from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import { sendReport } from "@/components/reportInteraction";
-import { useSession } from "@/components/AuthContext";
+import {sendReport} from "@/components/reportInteraction";
+import {useSession} from "@/components/AuthContext";
+
+export type FormState = {
+    title: string;
+    typesOfReports: string;
+    description: string;
+    image: string;
+    involvesYou: boolean;
+    email?: string;
+    date?: string;
+};
 
 const reportTypes = [
     "Violation Reports",
@@ -28,7 +38,7 @@ const reportTypes = [
 ];
 
 export default function ReportScreen() {
-    const { email } = useSession();
+    const {email} = useSession();
     const colorScheme = useColorScheme();
     const styles = Styles(colorScheme);
 
@@ -36,12 +46,12 @@ export default function ReportScreen() {
         title: "",
         typesOfReports: reportTypes[0],
         description: "",
-        image: null,
+        image: "",
         involvesYou: false,
     });
 
-    const handleInputChange = (name, value) => {
-        setForm({ ...form, [name]: value });
+    const handleInputChange = (name: string, value: string | boolean) => {
+        setForm({...form, [name]: value});
     };
 
     const handleSubmit = async () => {
@@ -50,13 +60,13 @@ export default function ReportScreen() {
             return;
         }
         try {
-            await sendReport({ ...form, email });
+            await sendReport({...form}, email);
             Alert.alert("Success", "Report sent successfully.");
             setForm({
                 title: "",
                 typesOfReports: reportTypes[0],
                 description: "",
-                image: null,
+                image: "",
                 involvesYou: false,
             });
         } catch (error) {
@@ -69,11 +79,11 @@ export default function ReportScreen() {
             "Upload Photo",
             "Choose the method",
             [
-                { text: "Camera", onPress: takePhoto },
-                { text: "Library", onPress: pickImage },
-                { text: "Cancel", style: "cancel" },
+                {text: "Camera", onPress: takePhoto},
+                {text: "Library", onPress: pickImage},
+                {text: "Cancel", style: "cancel"},
             ],
-            { cancelable: true }
+            {cancelable: true}
         );
     };
 
@@ -86,7 +96,7 @@ export default function ReportScreen() {
         });
 
         if (!result.canceled) {
-            setForm({...form, image: result.uri});
+            setForm({...form, image: result.assets[0].uri});
         }
     };
 
@@ -99,7 +109,7 @@ export default function ReportScreen() {
         });
 
         if (!result.canceled) {
-            setForm({...form, image: result.uri});
+            setForm({...form, image: result.assets[0].uri});
         }
     };
 
@@ -118,7 +128,7 @@ export default function ReportScreen() {
                     onValueChange={(itemValue) => handleInputChange("typesOfReports", itemValue)}
                 >
                     {reportTypes.map((type) => (
-                        <Picker.Item key={type} label={type} value={type} />
+                        <Picker.Item key={type} label={type} value={type}/>
                     ))}
                 </Picker>
                 <TextInput
@@ -142,21 +152,21 @@ export default function ReportScreen() {
                     <Text style={styles.buttonText}>Add an image</Text>
                 </TouchableOpacity>
                 {form.image && (
-                    <Image source={{ uri: form.image }} style={styles.image} />
+                    <Image source={{uri: form.image}} style={styles.image}/>
                 )}
-                <Button title="Submit Report" onPress={handleSubmit} />
+                <Button title="Submit Report" onPress={handleSubmit}/>
             </ScrollView>
         </TouchableWithoutFeedback>
     );
 }
 
-const Styles = (colorScheme) => StyleSheet.create({
+const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     container: {
         flexGrow: 1,
         justifyContent: 'center', // Center content vertically in the ScrollView
         alignItems: 'center', // Center content horizontally
         padding: 20,
-        backgroundColor: colorScheme === "dark" ? "#333" : "#f9f9f9",
+        backgroundColor: colorScheme === "dark" ? "#222" : "#f9f9f9",
     },
     input: {
         width: "90%",

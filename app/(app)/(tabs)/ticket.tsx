@@ -10,6 +10,7 @@ import {checkExistingTicket, loadUserTicket, useUserTickets,} from "@/components
 const PUBLISHABLE_KEY =
     "pk_test_51PAdx8P3rEHNvqwVcLah9GdadbHX14xd91mwQOYDxVFYLUnZDA6gYEubrsWmrQ35SKJg38oDaY46nwRu8xdMjwMB00Ek5iyCBR";
 const MERCHANT_IDENTIFIER = "merchant.com.stripe.reactnativeexample";
+const colorScheme = useColorScheme();
 
 export default function TicketScreen() {
     const {email} = useSession();
@@ -17,7 +18,6 @@ export default function TicketScreen() {
     const [ready, setReady] = useState(false);
     const {initPaymentSheet, presentPaymentSheet, loading} = usePaymentSheet();
     const [selectedTicket, setSelectedTicket] = useState("oneTimeTicket");
-    const colorScheme = useColorScheme();
 
     const ticketOptions = [
         {label: "One Time Night Ticket", value: "oneTimeNightTicket"},
@@ -153,7 +153,6 @@ export default function TicketScreen() {
                         )}
                     </PagerView>
                 )}
-
                 <Picker
                     selectedValue={selectedTicket}
                     onValueChange={(itemValue) => setSelectedTicket(itemValue)}
@@ -199,6 +198,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
+        backgroundColor: colorScheme === "light" ? "#f9f9f9" : "#222",
     },
     pagerView: {
         width: "100%",
