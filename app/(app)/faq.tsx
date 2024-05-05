@@ -18,14 +18,29 @@ export default function FaqScreen() {
 
   const faqData = [
     {
-      question: '¿Cómo puedo hacer XYZ?',
-      answer: 'Puedes hacer XYZ siguiendo estos pasos...',
+      question: 'Where can I physically purchase my parking ticket?',
+      answer: 'You can purchase your physical parking ticket at any of the two Circle K locations on campus.',
     },
     {
-      question: '¿Cuál es el horario de atención?',
-      answer: 'Nuestro horario de atención es de lunes a viernes de 9:00 am a 5:00 pm.',
+      question: 'When can I report an accident for someone else?',
+      answer: 'For security, the “Report for Someone Else” option should only be used by visual witnesses.',
     },
-    // Add more questions and answers here
+    {
+      question: 'What are the parking regulations?',
+      answer: 'You can review the parking regulations on the university site.',
+    },
+    {
+      question: 'How do I pay for my parking ticket?',
+      answer: 'You can pay for your parking ticket online or at any of the two Circle K locations on campus.',
+    },
+    {
+      question: 'How do I appeal a parking ticket?',
+      answer: 'You can appeal a parking ticket at the parking office.',
+    },
+    {
+      question: 'How do I get a parking permit?',
+      answer: 'You can get a parking permit at the parking office.',
+    }
   ];
 
   return (
