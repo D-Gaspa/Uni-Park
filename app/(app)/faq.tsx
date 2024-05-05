@@ -1,34 +1,84 @@
-import {StatusBar} from 'expo-status-bar';
-import {Platform, StyleSheet} from 'react-native';
-import EditScreenInfo from '@/components/EditScreenInfo';
-import {Text, View} from '@/components/Themed';
+import React, { useState } from 'react';
+import { StatusBar, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View } from '@/components/Themed';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function FaqScreen() {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Modal</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-            <EditScreenInfo path="app/(apps)/faq.tsx"/>
+  const [expandedQuestion, setExpandedQuestion] = useState(null);
 
-            {/* Use a light status bar on iOS to account for the black space above the modal */}
-            <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'}/>
-        </View>
-    );
+  const toggleQuestion = (questionIndex) => {
+    setExpandedQuestion((prevIndex) => (prevIndex === questionIndex ? null : questionIndex));
+  };
+
+  const faqData = [
+    {
+      question: '¿Cómo puedo hacer XYZ?',
+      answer: 'Puedes hacer XYZ siguiendo estos pasos...',
+    },
+    {
+      question: '¿Cuál es el horario de atención?',
+      answer: 'Nuestro horario de atención es de lunes a viernes de 9:00 am a 5:00 pm.',
+    },
+    // Agrega más preguntas y respuestas aquí
+  ];
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}></Text>
+      <View style={styles.separator} />
+      <ScrollView style={styles.content}>
+        {faqData.map((faq, index) => (
+          <TouchableOpacity key={index} onPress={() => toggleQuestion(index)}>
+            <View style={styles.faqItem}>
+              <Text style={styles.question}>{faq.question}</Text>
+              {expandedQuestion === index && <Text style={styles.answer}>{faq.answer}</Text>}
+              {expandedQuestion === index ? (
+                <Ionicons name="chevron-up-outline" size={24} color="#888" />
+              ) : (
+                <Ionicons name="chevron-down-outline" size={24} color="#888" />
+              )}
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <StatusBar style = "auto" />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  separator: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#ccc',
+    marginBottom: 20,
+  },
+  content: {
+    flex: 1,
+    width: '100%',
+  },
+  faqItem: {
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    paddingBottom: 10,
+  },
+  question: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  answer: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
 });
