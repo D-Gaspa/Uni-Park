@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
     Alert,
     Button,
@@ -11,12 +11,13 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     useColorScheme,
+    View
 } from "react-native";
 import Checkbox from "expo-checkbox";
-import {Picker} from "@react-native-picker/picker";
+import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import {sendReport} from "@/components/reportInteraction";
-import {useSession} from "@/components/AuthContext";
+import { sendReport } from "@/components/reportInteraction";
+import { useSession } from "@/components/AuthContext";
 
 const reportTypes = [
     "Violation Reports",
@@ -24,36 +25,23 @@ const reportTypes = [
     "Safety Issues",
     "Suggestions for Improvement",
     "Feedback on Parking Enforcement",
-] as const;
-type ReportType = (typeof reportTypes)[number];
-export type FormState = {
-    title: string | null;
-    typesOfReports: ReportType;
-    description: string | null;
-    image: string | null;
-    email: string | null;
-    involvesYou?: boolean;
-    date: string | null;
-};
+];
 
 export default function ReportScreen() {
-    const {email} = useSession();
+    const { email } = useSession();
     const colorScheme = useColorScheme();
     const styles = Styles(colorScheme);
-    const typesOfReports: ReportType[] = [...reportTypes];
 
-    const [form, setForm] = useState<FormState>({
-        title: null,
-        typesOfReports: "Violation Reports",
-        description: null,
+    const [form, setForm] = useState({
+        title: "",
+        typesOfReports: reportTypes[0],
+        description: "",
         image: null,
-        email: null,
         involvesYou: false,
-        date: null,
     });
 
-    const handleInputChange = (name: string, value: string) => {
-        setForm({...form, [name]: value});
+    const handleInputChange = (name, value) => {
+        setForm({ ...form, [name]: value });
     };
 
     const handleSubmit = async () => {
@@ -62,19 +50,16 @@ export default function ReportScreen() {
             return;
         }
         try {
-            await sendReport(form, email);
-            setForm({
-                title: null,
-                typesOfReports: "Violation Reports",
-                description: null,
-                image: null,
-                email: null,
-                involvesYou: false,
-                date: null,
-            });
+            await sendReport({ ...form, email });
             Alert.alert("Success", "Report sent successfully.");
+            setForm({
+                title: "",
+                typesOfReports: reportTypes[0],
+                description: "",
+                image: null,
+                involvesYou: false,
+            });
         } catch (error) {
-            console.error("Failed to send report:", error);
             Alert.alert("Error", "Failed to send report: " + error);
         }
     };
@@ -84,25 +69,15 @@ export default function ReportScreen() {
             "Upload Photo",
             "Choose the method",
             [
-                {text: "Camera", onPress: () => takePhoto()},
-                {text: "Library", onPress: () => pickImage()},
-                {text: "Cancel", style: "cancel"},
+                { text: "Camera", onPress: takePhoto },
+                { text: "Library", onPress: pickImage },
+                { text: "Cancel", style: "cancel" },
             ],
-            {cancelable: true}
+            { cancelable: true }
         );
     };
 
     const pickImage = async () => {
-        const {status} = await ImagePicker.getMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-            const {status} =
-                await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== "granted") {
-                alert("Sorry, we need media library permissions to make this work!");
-                return;
-            }
-        }
-
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -111,24 +86,11 @@ export default function ReportScreen() {
         });
 
         if (!result.canceled) {
-            setForm({...form, image: result.assets[0].uri});
+            setForm({...form, image: result.uri});
         }
-    };
-
-    const handleCheckBoxChange = (value: boolean) => {
-        setForm({...form, involvesYou: value});
     };
 
     const takePhoto = async () => {
-        const {status} = await ImagePicker.getCameraPermissionsAsync();
-        if (status !== "granted") {
-            const {status} = await ImagePicker.requestCameraPermissionsAsync();
-            if (status !== "granted") {
-                alert("Sorry, we need camera permissions to make this work!");
-                return;
-            }
-        }
-
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -137,7 +99,7 @@ export default function ReportScreen() {
         });
 
         if (!result.canceled) {
-            setForm({...form, image: result.assets[0].uri});
+            setForm({...form, image: result.uri});
         }
     };
 
@@ -147,93 +109,94 @@ export default function ReportScreen() {
                 <TextInput
                     style={styles.input}
                     placeholder="Title"
-                    placeholderTextColor={colorScheme === "dark" ? "#fff" : "#000"}
-                    value={form.title ?? ""}
+                    value={form.title}
                     onChangeText={(text) => handleInputChange("title", text)}
                 />
                 <Picker
                     selectedValue={form.typesOfReports}
-                    style={[styles.input, {borderColor: '#fff', borderWidth: 1}]} // TODO: This line doesn't work
-                    onValueChange={(itemValue) =>
-                        handleInputChange("typesOfReports", itemValue)
-                    }
+                    style={styles.input}
+                    onValueChange={(itemValue) => handleInputChange("typesOfReports", itemValue)}
                 >
-                    {typesOfReports.map((reportType) => (
-                        <Picker.Item
-                            key={reportType}
-                            label={reportType}
-                            value={reportType}
-                        />
+                    {reportTypes.map((type) => (
+                        <Picker.Item key={type} label={type} value={type} />
                     ))}
                 </Picker>
                 <TextInput
                     style={[styles.input, styles.description]}
                     placeholder="Description"
-                    placeholderTextColor={colorScheme === "dark" ? "#fff" : "#000"}
-                    value={form.description ?? ""}
+                    value={form.description}
                     onChangeText={(text) => handleInputChange("description", text)}
                     multiline={true}
                 />
-                <Checkbox
-                    value={form.involvesYou}
-                    onValueChange={handleCheckBoxChange}
-                />
-                <Text
-                    style={{color: colorScheme === "dark" ? "#fff" : "#000"}}>
-                    Does this report involve you?
-                </Text>
+                <View style={styles.checkboxContainer}>
+                    <Checkbox
+                        value={form.involvesYou}
+                        onValueChange={(value) => handleInputChange("involvesYou", value)}
+                        style={styles.checkbox}
+                    />
+                    <Text style={styles.checkboxLabel}>
+                        Does this report involve you?
+                    </Text>
+                </View>
                 <TouchableOpacity onPress={handleImageOption} style={styles.button}>
                     <Text style={styles.buttonText}>Add an image</Text>
                 </TouchableOpacity>
                 {form.image && (
-                    <Image source={{uri: form.image}} style={styles.image}/>
+                    <Image source={{ uri: form.image }} style={styles.image} />
                 )}
-                <Button title="Submit Report" onPress={handleSubmit}/>
+                <Button title="Submit Report" onPress={handleSubmit} />
             </ScrollView>
         </TouchableWithoutFeedback>
     );
 }
 
-const Styles = (colorScheme: string | null | undefined) =>
-    StyleSheet.create({
-        container: {
-            marginTop: 120,
-            marginBottom: 20,
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: colorScheme === "dark" ? "#000" : "#fff",
-        },
-        title: {
-            fontSize: 20,
-            fontWeight: "bold",
-            color: colorScheme === "dark" ? "#fff" : "#000",
-            // Change placeholder color
-        },
-        input: {
-            width: "80%",
-            padding: 10,
-            marginVertical: 10,
-            borderWidth: 1,
-            borderColor: colorScheme === "dark" ? "#fff" : "#000",
-            backgroundColor: colorScheme === "dark" ? "#555" : "#eee",
-            color: colorScheme === "dark" ? "#fff" : "#000",
-        },
-        description: {
-            height: 100,
-            color: colorScheme === "dark" ? "#fff" : "#000",
-        },
-        button: {
-            backgroundColor: "#007BFF",
-            padding: 10,
-            margin: 10,
-        },
-        buttonText: {
-            color: "#fff",
-        },
-        image: {
-            width: 100,
-            height: 100,
-            margin: 10,
-        },
-    });
+const Styles = (colorScheme) => StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        justifyContent: 'center', // Centers content vertically in the ScrollView
+        alignItems: 'center', // Centers content horizontally
+        padding: 20,
+        backgroundColor: colorScheme === "dark" ? "#333" : "#f9f9f9",
+    },
+    input: {
+        width: "90%",
+        padding: 12,
+        marginVertical: 8,
+        borderWidth: 1,
+        borderColor: colorScheme === "dark" ? "#aaa" : "#ddd",
+        backgroundColor: colorScheme === "dark" ? "#555" : "#fff",
+    },
+    description: {
+        height: 120,
+        textAlignVertical: 'top',
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    checkbox: {
+        margin: 8,
+    },
+    checkboxLabel: {
+        color: colorScheme === "dark" ? "#fff" : "#000",
+    },
+    button: {
+        backgroundColor: "#0066cc",
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    buttonText: {
+        color: "#fff",
+        fontWeight: 'bold',
+    },
+    image: {
+        width: 200,
+        height: 200,
+        resizeMode: 'contain',
+        alignSelf: 'center',
+        marginBottom: 10,
+    },
+});
