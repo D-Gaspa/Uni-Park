@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StatusBar, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { StatusBar, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function FaqScreen() {
   const [expandedQuestion, setExpandedQuestion] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleQuestion = (questionIndex) => {
     setExpandedQuestion((prevIndex) => (prevIndex === questionIndex ? null : questionIndex));
@@ -25,6 +26,12 @@ export default function FaqScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}></Text>
+      <TextInput 
+        style={styles.input}
+        placeholder="Filtrar búsqueda..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
       <View style={styles.separator} />
       <ScrollView style={styles.content}>
         {faqData.map((faq, index) => (
@@ -41,7 +48,7 @@ export default function FaqScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <StatusBar style = "auto" />
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -55,6 +62,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  input: {
+    fontSize: 18,
+    marginBottom: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
   separator: {
     width: '100%',
