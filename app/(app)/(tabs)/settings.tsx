@@ -1,10 +1,13 @@
 import React from 'react';
-import { StyleSheet, Button, Text, View } from 'react-native';
-import { useSession } from '@/components/AuthContext';
-import { MaterialIcons } from '@expo/vector-icons'; // Ensure you have @expo/vector-icons installed
+import {Button, StyleSheet, Text, View} from 'react-native';
+import {useSession} from '@/components/AuthContext';
+import {MaterialIcons} from '@expo/vector-icons';
+import {useColorScheme} from "@/components/useColorScheme";
 
 export default function SettingsScreen() {
-    const { signOut, email } = useSession();
+    const {signOut, email, role} = useSession();
+    const colorScheme = useColorScheme();
+    const styles = Styles(colorScheme);
 
     return (
         <View style={styles.container}>
@@ -13,8 +16,12 @@ export default function SettingsScreen() {
                 <Text style={styles.label}>Email:</Text>
                 <Text style={styles.value}>{email}</Text>
             </View>
+            <View style={styles.settingItem}>
+                <Text style={styles.label}>Role:</Text>
+                <Text style={styles.value}>{role}</Text>
+            </View>
             <View style={styles.buttonContainer}>
-                <MaterialIcons name="logout" size={24} color="red" />
+                <MaterialIcons name="logout" size={24} color="red"/>
                 <Button
                     title="Sign Out"
                     color="red"
@@ -25,11 +32,12 @@ export default function SettingsScreen() {
     );
 }
 
-const styles = StyleSheet.create({
+const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center', // Centers everything vertically in the container
         padding: 20,
+        backgroundColor: colorScheme === 'light' ? '#f9f9f9' : '#222',
     },
     title: {
         fontSize: 22,
