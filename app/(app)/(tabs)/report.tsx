@@ -153,8 +153,8 @@ export default function ReportScreen() {
 const Styles = (colorScheme) => StyleSheet.create({
     container: {
         flexGrow: 1,
-        justifyContent: 'center', // Centers content vertically in the ScrollView
-        alignItems: 'center', // Centers content horizontally
+        justifyContent: 'center', // Center content vertically in the ScrollView
+        alignItems: 'center', // Center content horizontally
         padding: 20,
         backgroundColor: colorScheme === "dark" ? "#333" : "#f9f9f9",
     },
@@ -165,10 +165,12 @@ const Styles = (colorScheme) => StyleSheet.create({
         borderWidth: 1,
         borderColor: colorScheme === "dark" ? "#aaa" : "#ddd",
         backgroundColor: colorScheme === "dark" ? "#555" : "#fff",
+        borderRadius: 10, // Rounded edges
     },
     description: {
         height: 120,
         textAlignVertical: 'top',
+        borderRadius: 10, // Rounded edges
     },
     checkboxContainer: {
         flexDirection: 'row',
@@ -184,7 +186,7 @@ const Styles = (colorScheme) => StyleSheet.create({
     button: {
         backgroundColor: "#0066cc",
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 5, // Rounded edges
         alignItems: 'center',
         marginBottom: 10,
     },
@@ -198,5 +200,6 @@ const Styles = (colorScheme) => StyleSheet.create({
         resizeMode: 'contain',
         alignSelf: 'center',
         marginBottom: 10,
+        borderRadius: 10, // Rounded edges
     },
 });
