@@ -4,13 +4,14 @@ import MapView, {Marker, Polygon} from "react-native-maps";
 import {getParkingSpots, ParkingSpot, updateParkingSpot,} from "@/components/parkingSpots";
 import mapStyleDark from "@/map-style-dark-mode.json";
 import mapStyleLight from "@/map-style-light-mode.json";
+import mapStyleBlue from "@/map-style-blue-mode.json";
 import {db} from "@/firebase-config";
 import {useSession} from "@/components/AuthContext";
 import {FontAwesome5} from "@expo/vector-icons";
-import {useColorScheme} from "@/components/useColorScheme";
+import {useColorSchemeWithSession} from "@/components/useColorScheme";
 
 export default function HomeScreen() {
-    const colorScheme = useColorScheme();
+    const colorScheme = useColorSchemeWithSession();
     const mapRef = useRef<MapView>(null);
     const [region] = useState({
         latitude: 19.05436655381292,
@@ -127,7 +128,7 @@ export default function HomeScreen() {
         <View style={styles.container}>
             {/* Map View */}
             <MapView
-                customMapStyle={colorScheme === 'dark' ? mapStyleDark : mapStyleLight}
+                customMapStyle={colorScheme === 'dark' ? mapStyleDark : colorScheme === 'light' ? mapStyleLight : mapStyleBlue}
                 initialRegion={region}
                 onPress={handleMapPress}
                 ref={mapRef}
@@ -173,7 +174,7 @@ export default function HomeScreen() {
                         <FontAwesome5
                             name={selectedSpot ? (selectedSpot.isClosed ? 'unlock' : 'lock') : 'lock'}
                             size={25}
-                            color={colorScheme === 'dark' ? 'white' : 'black'}
+                            color={colorScheme === 'light' ? 'black' : 'white'}
                         />
                     </TouchableOpacity>
                 </Animated.View>

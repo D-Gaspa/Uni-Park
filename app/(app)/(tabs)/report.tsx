@@ -6,18 +6,16 @@ import {
     Keyboard, Platform,
     ScrollView,
     StyleSheet,
-    Text,
-    TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from "react-native";
 import Checkbox from "expo-checkbox";
-import {Picker} from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import {sendReport} from "@/components/reportInteraction";
 import {useSession} from "@/components/AuthContext";
 import {useColorScheme} from "@/components/useColorScheme";
+import {Picker, Text, TextInput, useThemeColor} from "@/components/Themed";
 
 export type FormState = {
     title: string;
@@ -41,6 +39,8 @@ export default function ReportScreen() {
     const {email} = useSession();
     const colorScheme = useColorScheme();
     const styles = Styles(colorScheme);
+    const backgroundColor = useThemeColor({}, "background");
+    const buttonBackground = useThemeColor({}, "buttonBackground");
 
     const [form, setForm] = useState({
         title: "",
@@ -115,13 +115,12 @@ export default function ReportScreen() {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView contentContainerStyle={[styles.container, {backgroundColor}]}>
                 <Text style={styles.header}>Report an Issue</Text>
                 {/* Title Input */}
                 <TextInput
                     style={styles.input}
                     placeholder="Title ..."
-                    placeholderTextColor={colorScheme === "dark" ? "#bbb" : "#666"}
                     value={form.title}
                     onChangeText={(text) => handleInputChange("title", text)}
                 />
@@ -139,7 +138,6 @@ export default function ReportScreen() {
                 {/* Description Input */}
                 <TextInput
                     style={[styles.input, styles.description]}
-                    placeholderTextColor={colorScheme === "dark" ? "#bbb" : "#666"}
                     placeholder="Description ..."
                     value={form.description}
                     onChangeText={(text) => handleInputChange("description", text)}
@@ -157,7 +155,7 @@ export default function ReportScreen() {
                 </View>
 
                 {/* Image Upload Button */}
-                <TouchableOpacity onPress={handleImageOption} style={styles.button}>
+                <TouchableOpacity onPress={handleImageOption} style={[styles.button, {backgroundColor: buttonBackground}]}>
                     <Text style={styles.buttonText}>Add an image</Text>
                 </TouchableOpacity>
 
@@ -177,7 +175,6 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         justifyContent: 'center', // Center content vertically in the ScrollView
         alignItems: 'center', // Center content horizontally
         padding: 20,
-        backgroundColor: colorScheme === "dark" ? "#222" : "#f9f9f9",
     },
     header: {
         alignSelf: 'center',
@@ -185,7 +182,6 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 50,
         marginBottom: 5,
-        color: colorScheme === "light" ? "black" : "white"
     },
     input: {
         width: "90%",
@@ -193,9 +189,7 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         marginVertical: 8,
         borderWidth: 1,
         borderColor: Platform.OS === "ios" ? colorScheme === "dark" ? "#aaa" : "#ddd" : "transparent",
-        backgroundColor: colorScheme === "light" ? "#d1d1d1" : "#333",
         borderRadius: Platform.OS === "ios" ? 10 : 0, // Rounded edges for iOS, none for Android
-        color: colorScheme === "dark" ? "#fff" : "#000",
     },
     description: {
         color: colorScheme === "dark" ? "#fff" : "#000",

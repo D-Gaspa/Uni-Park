@@ -5,13 +5,11 @@ import {
     ScrollView,
     StatusBar,
     StyleSheet,
-    Text,
-    TextInput,
     TouchableOpacity,
-    View
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {useColorScheme} from "@/components/useColorScheme";
+import {Text, TextInput, useThemeColor, View} from "@/components/Themed";
 
 export default function FaqScreen() {
     const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
@@ -19,6 +17,7 @@ export default function FaqScreen() {
     const [comment, setComment] = useState('');
     const colorScheme = useColorScheme();
     const styles = Styles(colorScheme);
+    const buttonBackground = useThemeColor({}, 'buttonBackground');
 
     const toggleQuestion = (questionIndex: number | null) => {
         setExpandedQuestion((prevIndex) => (prevIndex === questionIndex ? null : questionIndex));
@@ -65,7 +64,6 @@ export default function FaqScreen() {
             <TextInput
                 style={[styles.input, {marginTop: Platform.OS === "ios" ? "auto" : 20}]}
                 placeholder="Filter search..."
-                placeholderTextColor={colorScheme === "dark" ? "#bbb" : "#666"}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
             />
@@ -102,14 +100,13 @@ export default function FaqScreen() {
             <TextInput
                 style={styles.commentInput}
                 placeholder="Write your comment here..."
-                placeholderTextColor={colorScheme === "dark" ? "#bbb" : "#666"}
                 value={comment}
                 onChangeText={setComment}
                 multiline
             />
 
             {/* Submit Comment Button */}
-            <Button title="Send comment" onPress={submitComment}/>
+            <Button title="Send comment" onPress={submitComment} color={buttonBackground}/>
 
             {/* Status Bar */}
             <StatusBar barStyle={'default'}/>
@@ -121,16 +118,13 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: colorScheme === 'dark' ? '#222' : '#f9f9f9',
     },
     title: {
-        color: colorScheme === 'dark' ? 'white' : 'black',
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
     },
     input: {
-        color: colorScheme === 'dark' ? '#fff' : '#000',
         fontSize: 18,
         marginBottom: 20,
         padding: 10,
@@ -158,13 +152,11 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         paddingBottom: 10,
     },
     question: {
-        color: colorScheme === 'dark' ? 'white' : 'black',
         fontSize: 18,
         fontWeight: 'bold',
         flex: 1, // Flex to push the icon to the right
     },
     answer: {
-        color: colorScheme === 'dark' ? 'white' : 'black',
         fontSize: 16,
         padding: 10, // Added padding for better text display
         paddingLeft: 20, // Indent the answer to align under the question text
@@ -173,13 +165,11 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         padding: 10,
     },
     commentPrompt: {
-        color: colorScheme === 'dark' ? 'white' : 'black',
         fontSize: 16,
         marginTop: 20,
         marginBottom: 10,
     },
     commentInput: {
-        color: colorScheme === 'dark' ? '#fff' : '#000',
         fontSize: 16,
         padding: 10,
         borderWidth: 1,

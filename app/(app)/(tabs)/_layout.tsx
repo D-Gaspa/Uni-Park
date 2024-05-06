@@ -2,9 +2,8 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {Link, Tabs} from 'expo-router';
 import {Linking, Pressable} from 'react-native';
-import Colors from '@/constants/Colors';
-import {useColorScheme} from '@/components/useColorScheme';
 import {useClientOnlyValue} from '@/components/useClientOnlyValue';
+import {useThemeColor} from "@/components/Themed";
 
 const constantStrings = {
     url: 'https://aplicaciones.udlap.mx/accesos/Login.aspx',
@@ -18,9 +17,10 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
-    const colorScheme = useColorScheme();
+    const logoColor = useThemeColor({}, 'logo');
+    const tint = useThemeColor({}, 'tint');
 
-// Define common options for headerRight
+    // Define common options for headerRight
     const headerRight = () => (
         <Link href="/faq" asChild>
             <Pressable>
@@ -28,7 +28,7 @@ export default function TabLayout() {
                     <FontAwesome
                         name="question-circle-o"
                         size={25}
-                        color={Colors[(colorScheme ?? 'light') as 'light' | 'dark' | 'dim'].text}
+                        color={logoColor}
                         style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
                     />
                 )}
@@ -40,7 +40,7 @@ export default function TabLayout() {
         <Tabs
             screenOptions={{
                 headerShown: useClientOnlyValue(true),
-                tabBarActiveTintColor: Colors[(colorScheme) as 'light' | 'dark' | 'dim'].tint,
+                tabBarActiveTintColor: tint,
                 tabBarShowLabel: false,
             }}
         >
@@ -58,7 +58,7 @@ export default function TabLayout() {
                                 <FontAwesome
                                     name="qrcode"
                                     size={40}
-                                    color={Colors[(colorScheme ?? 'light') as 'light' | 'dark' | 'dim'].text}
+                                    color={logoColor}
                                     style={{marginLeft: 15, opacity: pressed ? 0.5 : 1}}
                                 />
                             )}

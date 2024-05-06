@@ -1,11 +1,13 @@
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Redirect, Stack} from 'expo-router';
-import {useColorScheme} from '@/components/useColorScheme';
+import {useColorSchemeWithSession} from '@/components/useColorScheme';
 import {useSession} from '@/components/AuthContext';
 import {useFonts} from "expo-font";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import * as SplashScreen from "expo-splash-screen";
+import Colors from "@/constants/Colors";
+import darkTheme from "@react-navigation/native/src/theming/DarkTheme";
 
 export const unstable_settings = {
     // Ensure that reloading on any modal keeps a back button present.
@@ -44,11 +46,37 @@ export default function AppLayout() {
     return <AppLayoutNav/>;
 }
 
+const BlueTheme = {
+    ...darkTheme,
+    colors: {
+        ...darkTheme.colors,
+        card: Colors.blue.tabLayoutBackground,
+        text: Colors.blue.text,
+        notification: Colors.blue.warning,
+    },
+};
+
 function AppLayoutNav() {
-    const colorScheme = useColorScheme();
+    const colorScheme = useColorSchemeWithSession();
+    const [theme, setTheme] = useState(DefaultTheme); // Set initial theme to DefaultTheme
+
+    useEffect(() => {
+        // Update theme when colorScheme changes
+        switch (colorScheme) {
+            case 'dark':
+                setTheme(DarkTheme);
+                break;
+            case 'blue':
+                setTheme(BlueTheme);
+                break;
+            default:
+                setTheme(DefaultTheme);
+                break;
+        }
+    }, [colorScheme]);
 
     return (
-        <ThemeProvider value={colorScheme === 'white' ? DefaultTheme : DarkTheme}>
+        <ThemeProvider value={theme}>
             <Stack>
                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
                 <Stack.Screen
@@ -56,7 +84,6 @@ function AppLayoutNav() {
                     options={{
                         presentation: 'modal',
                         title: 'FAQ',
-                        // headerTitle: '',
                         headerTransparent: true,
                     }}
                 />

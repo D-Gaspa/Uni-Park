@@ -10,11 +10,10 @@ export {
 } from "expo-router";
 
 
-
 export default function Root() {
     return (
         <ThemeProvider
-            value={useColorScheme() === "white" ? DefaultTheme : DarkTheme}
+            value={useColorScheme() === "dark" ? DarkTheme : DefaultTheme}
         >
             <SessionProvider>
                 <Slot/>

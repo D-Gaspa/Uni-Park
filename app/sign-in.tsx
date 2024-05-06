@@ -3,7 +3,6 @@ import {Text, useThemeColor, View} from '@/components/Themed';
 import {useSession} from '@/components/AuthContext';
 import React from "react";
 import {router} from "expo-router";
-import {useColorScheme} from "@/components/useColorScheme";
 
 export default function SignIn() {
     const {signIn} = useSession();
@@ -11,8 +10,6 @@ export default function SignIn() {
     const [password, setPassword] = React.useState('');
     const textColor = useThemeColor({light: 'black', dark: 'white'}, 'text');
     const [error, setError] = React.useState('');
-    const colorScheme = useColorScheme();
-    const styles = Styles(colorScheme);
 
     const handleSignIn = async () => {
         const success = await signIn(email, password);
@@ -28,14 +25,14 @@ export default function SignIn() {
     return (
         <View style={styles.container}>
             <TextInput
-                style={[styles.input, {color: textColor}]}
+                style={[styles.input, {color: textColor}, {borderColor: textColor}]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="Email"
                 placeholderTextColor={textColor}
             />
             <TextInput
-                style={[styles.input, {color: textColor}]}
+                style={[styles.input, {color: textColor}, {borderColor: textColor}]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Password"
@@ -53,13 +50,12 @@ export default function SignIn() {
     );
 }
 
-const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: colorScheme === 'dark' ? '#222' : '#f9f9f9',
     },
     input: {
         width: '85%',
@@ -81,6 +77,7 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         fontWeight: 'bold',
     },
     forgotPassword: {
+        color: '#1E90FF',
         marginTop: 15,
         textDecorationLine: 'underline',
     },

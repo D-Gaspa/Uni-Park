@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Button, Platform, StyleSheet, Text, View,} from "react-native";
+import {Alert, Button, Platform, StyleSheet, View,} from "react-native";
 import {StripeProvider, usePaymentSheet} from "@stripe/stripe-react-native";
-import {Picker} from "@react-native-picker/picker";
 import QRCode from "react-native-qrcode-svg";
 import PagerView from "react-native-pager-view";
 import {useSession} from "@/components/AuthContext";
 import {checkExistingTicket, loadUserTicket, useUserTickets,} from "@/components/userRelatedInfo";
 import {useColorScheme} from "@/components/useColorScheme";
+import {Picker, Text, useThemeColor} from "@/components/Themed";
 
 const PUBLISHABLE_KEY =
     "pk_test_51PAdx8P3rEHNvqwVcLah9GdadbHX14xd91mwQOYDxVFYLUnZDA6gYEubrsWmrQ35SKJg38oDaY46nwRu8xdMjwMB00Ek5iyCBR";
@@ -20,6 +20,9 @@ export default function TicketScreen() {
     const [selectedTicket, setSelectedTicket] = useState("oneTimeTicket");
     const colorScheme = useColorScheme();
     const styles = Styles(colorScheme);
+    const backgroundColor = useThemeColor({}, 'background');
+    const buttonColor = useThemeColor({}, 'buttonBackground');
+    const warningColor = useThemeColor({}, 'warning');
 
     const ticketOptions = [
         {label: "One Time Night Ticket", value: "oneTimeNightTicket"},
@@ -128,14 +131,14 @@ export default function TicketScreen() {
 
     return (
         <StripeProvider publishableKey={PUBLISHABLE_KEY} merchantIdentifier={MERCHANT_IDENTIFIER}>
-            <View style={styles.container}>
+            <View style={[styles.container, {backgroundColor: backgroundColor}]}>
                 {/* Show a loading message if userTickets is null */}
                 {userTickets === null && <View style={styles.centeredContent}><Text>Loading tickets...</Text></View>}
 
                 {/* Show no tickets message if userTickets is an empty object */}
                 {userTickets && Object.keys(userTickets).length === 0 &&
-                    <View style={styles.centeredContent}><Text style={styles.noTicketsText}>You do not have
-                        tickets</Text></View>}
+                    <View style={styles.centeredContent}><Text style={[styles.noTicketsText, {color: warningColor}]}>
+                        You do not have tickets</Text></View>}
 
                 {/* Show "Swipe to view all your tickets" only when there are multiple tickets */}
                 {userTickets && Object.keys(userTickets).length > 1 &&
@@ -148,8 +151,7 @@ export default function TicketScreen() {
                         {Object.entries(userTickets).map(([ticketType, ticketIds], index) => (
                             <View key={index} style={styles.page}>
                                 {/* Format and display the ticket type */}
-                                <Text
-                                    style={{color: colorScheme === "light" ? "black" : "white"}}>{formatTicketType(ticketType)}</Text>
+                                <Text>{formatTicketType(ticketType)}</Text>
 
                                 {/* Generate and display QR codes for each ticket */}
                                 {ticketIds.map((ticketId, subIndex) => <QRCode key={subIndex} value={ticketId}
@@ -165,16 +167,13 @@ export default function TicketScreen() {
                 {/* Purchase section */}
                 <View style={styles.purchaseSection}>
                     <Text style={styles.header}>Purchase a ticket</Text>
-                    <Text style={{color: colorScheme === "light" ? "black" : "white"}}>
-                        Choose a ticket type to purchase
-                    </Text>
+                    <Text>Choose a ticket type to purchase</Text>
                 </View>
 
                 {/* Ticket selection dropdown */}
                 <Picker
                     selectedValue={selectedTicket}
                     onValueChange={setSelectedTicket}
-                    dropdownIconColor={colorScheme === "light" ? "black" : "white"}
                     style={styles.picker}
                     mode="dialog"
                 >
@@ -184,8 +183,8 @@ export default function TicketScreen() {
                 </Picker>
 
                 {/* Buy Ticket button */}
-                <View style={styles.button}>
-                    <Button title="Buy Ticket Now" onPress={buyTicket} disabled={!ready || loading}/>
+                <View style={[styles.button]}>
+                    <Button title="Buy Ticket Now" onPress={buyTicket} disabled={!ready || loading} color={buttonColor}/>
                 </View>
             </View>
         </StripeProvider>
@@ -202,14 +201,12 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
-        backgroundColor: colorScheme === "light" ? "#f9f9f9" : "#222"
     },
     header: {
         fontSize: 18,
         fontWeight: 'bold',
         marginTop: 5,
         marginBottom: 5,
-        color: colorScheme === "light" ? "black" : "white"
     },
     pagerView: {
         width: "100%",
@@ -232,8 +229,6 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         marginTop: 20
     },
     picker: {
-        color: colorScheme === "light" ? "black" : "white",
-        backgroundColor: Platform.OS === "ios" ? "default" : colorScheme === "light" ? "#d1d1d1" : "#333",
         width: 300,
         height: Platform.OS === "ios" ? 150 : 40,
         marginTop: Platform.OS === "ios" ? 5 : 10,
@@ -254,7 +249,6 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         height: 200
     },
     noTicketsText: {
-        color: "red",
         fontSize: 16,
         fontWeight: "bold"
     },
