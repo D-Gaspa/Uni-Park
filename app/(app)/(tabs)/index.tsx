@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Alert, Animated, StyleSheet, TouchableOpacity, useColorScheme, View,} from "react-native";
+import {Alert, Animated, StyleSheet, TouchableOpacity, View,} from "react-native";
 import MapView, {Marker, Polygon} from "react-native-maps";
 import {getParkingSpots, ParkingSpot, updateParkingSpot,} from "@/components/parkingSpots";
 import mapStyleDark from "@/map-style-dark-mode.json";
@@ -7,6 +7,7 @@ import mapStyleLight from "@/map-style-light-mode.json";
 import {db} from "@/firebase-config";
 import {useSession} from "@/components/AuthContext";
 import {FontAwesome5} from "@expo/vector-icons";
+import {useColorScheme} from "@/components/useColorScheme";
 
 export default function HomeScreen() {
     const colorScheme = useColorScheme();

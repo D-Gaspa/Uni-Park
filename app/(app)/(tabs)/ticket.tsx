@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Button, Platform, StyleSheet, Text, useColorScheme, View,} from "react-native";
+import {Alert, Button, Platform, StyleSheet, Text, View,} from "react-native";
 import {StripeProvider, usePaymentSheet} from "@stripe/stripe-react-native";
 import {Picker} from "@react-native-picker/picker";
 import QRCode from "react-native-qrcode-svg";
 import PagerView from "react-native-pager-view";
 import {useSession} from "@/components/AuthContext";
 import {checkExistingTicket, loadUserTicket, useUserTickets,} from "@/components/userRelatedInfo";
+import {useColorScheme} from "@/components/useColorScheme";
 
 const PUBLISHABLE_KEY =
     "pk_test_51PAdx8P3rEHNvqwVcLah9GdadbHX14xd91mwQOYDxVFYLUnZDA6gYEubrsWmrQ35SKJg38oDaY46nwRu8xdMjwMB00Ek5iyCBR";

@@ -14,7 +14,7 @@ export {
 export default function Root() {
     return (
         <ThemeProvider
-            value={useColorScheme() === "dark" ? DarkTheme : DefaultTheme}
+            value={useColorScheme() === "white" ? DefaultTheme : DarkTheme}
         >
             <SessionProvider>
                 <Slot/>

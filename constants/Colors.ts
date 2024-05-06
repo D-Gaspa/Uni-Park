@@ -1,13 +1,8 @@
 export const colors = {
     tintColorLight: '#2f95dc',
     tintColorDark: '#fff',
-    blue_purple: '#635BFF',
-    blue_purple_dark: '#5851DF',
-    light_gray: '#F6F9FC',
-    dark_gray: '#425466',
-    slate: '#0A2540',
-    black: '#000',
-    white: '#fff',
+    black: '#222',
+    white: '#f9f9f9',
     default: '#ccc',
 };
 
@@ -26,4 +21,11 @@ export default {
         tabIconDefault: colors.default,
         tabIconSelected: colors.tintColorDark,
     },
+    dim: {
+        text: colors.white,
+        background: colors.black,
+        tint: colors.tintColorDark,
+        tabIconDefault: colors.default,
+        tabIconSelected: colors.tintColorDark,
+    }
 };

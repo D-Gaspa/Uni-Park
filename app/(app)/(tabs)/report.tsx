@@ -10,7 +10,6 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    useColorScheme,
     View
 } from "react-native";
 import Checkbox from "expo-checkbox";
@@ -18,6 +17,7 @@ import {Picker} from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import {sendReport} from "@/components/reportInteraction";
 import {useSession} from "@/components/AuthContext";
+import {useColorScheme} from "@/components/useColorScheme";
 
 export type FormState = {
     title: string;

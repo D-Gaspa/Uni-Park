@@ -75,22 +75,24 @@ export default function FaqScreen() {
 
             {/* FAQ List */}
             <ScrollView style={styles.content}>
-                {faqData.map((faq, index) => (
-                    <View key={index}>
-                        {/* FAQ Item */}
-                        <TouchableOpacity onPress={() => toggleQuestion(index)} style={styles.faqItem}>
-                            <Text style={styles.question}>{faq.question}</Text>
-                            <Ionicons
-                                name={expandedQuestion === index ? "chevron-up-outline" : "chevron-down-outline"}
-                                size={24}
-                                color="#888"
-                                style={styles.icon}
-                            />
-                        </TouchableOpacity>
-                        {/* FAQ Answer */}
-                        {expandedQuestion === index && <Text style={styles.answer}>{faq.answer}</Text>}
-                    </View>
-                ))}
+                {faqData
+                    .filter(faq => faq.question.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .map((faq, index) => (
+                        <View key={index}>
+                            {/* FAQ Item */}
+                            <TouchableOpacity onPress={() => toggleQuestion(index)} style={styles.faqItem}>
+                                <Text style={styles.question}>{faq.question}</Text>
+                                <Ionicons
+                                    name={expandedQuestion === index ? "chevron-up-outline" : "chevron-down-outline"}
+                                    size={24}
+                                    color="#888"
+                                    style={styles.icon}
+                                />
+                            </TouchableOpacity>
+                            {/* FAQ Answer */}
+                            {expandedQuestion === index && <Text style={styles.answer}>{faq.answer}</Text>}
+                        </View>
+                    ))}
             </ScrollView>
 
             {/* Comment Prompt */}

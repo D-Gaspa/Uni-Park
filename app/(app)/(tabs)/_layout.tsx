@@ -28,7 +28,7 @@ export default function TabLayout() {
                     <FontAwesome
                         name="question-circle-o"
                         size={25}
-                        color={Colors[colorScheme ?? 'light'].text}
+                        color={Colors[(colorScheme ?? 'light') as 'light' | 'dark' | 'dim'].text}
                         style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
                     />
                 )}
@@ -40,7 +40,7 @@ export default function TabLayout() {
         <Tabs
             screenOptions={{
                 headerShown: useClientOnlyValue(true),
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                tabBarActiveTintColor: Colors[(colorScheme) as 'light' | 'dark' | 'dim'].tint,
                 tabBarShowLabel: false,
             }}
         >
@@ -58,7 +58,7 @@ export default function TabLayout() {
                                 <FontAwesome
                                     name="qrcode"
                                     size={40}
-                                    color={Colors[colorScheme ?? 'light'].text}
+                                    color={Colors[(colorScheme ?? 'light') as 'light' | 'dark' | 'dim'].text}
                                     style={{marginLeft: 15, opacity: pressed ? 0.5 : 1}}
                                 />
                             )}

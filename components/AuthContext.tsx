@@ -10,6 +10,8 @@ export const AuthContext = React.createContext<{
     isLoading: boolean;
     role?: string | null;
     email: string | null;
+    theme?: string | null;
+    setTheme: (theme: string) => void;
 }>({
     signIn: () => Promise.resolve(false),
     signOut: () => null,
@@ -17,6 +19,8 @@ export const AuthContext = React.createContext<{
     isLoading: false,
     role: null,
     email: null,
+    theme: null,
+    setTheme: () => null,
 });
 
 export function useSession() {
@@ -34,6 +38,7 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
     const auth = getAuth();
     const [[, role], setRole] = useStorageState('role');
     const [[, email], setEmail] = useStorageState('email');
+    const [[, theme], setTheme] = useStorageState('theme');
 
     const updateEmail = () => {
         const auth = getAuth();
@@ -75,6 +80,8 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
                 isLoading,
                 role,
                 email,
+                theme,
+                setTheme,
             }}>
             {props.children}
         </AuthContext.Provider>
