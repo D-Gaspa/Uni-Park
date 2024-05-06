@@ -155,7 +155,8 @@ export default function HomeScreen() {
                             coordinate={getCenter(spot.coordinates)}
                             icon={spot.isClosed ? require("@/assets/images/map-marker-closed.png") :
                                 spot.availableSpots === 0 ? require("@/assets/images/map-marker.png") :
-                                    require("@/assets/images/map-marker-white.png")}
+                                    colorScheme === "light" ? require("@/assets/images/map-marker-white.png") :
+                                        require("@/assets/images/map-marker-white-blue.png")}
                             onPress={() => handlePress(spot.id)}
                             opacity={1}
                             title={spot.teacherOnly ? `Teacher Parking Spot ${spot.id}` : `Parking Spot ${spot.id}`}

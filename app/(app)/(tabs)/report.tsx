@@ -129,7 +129,6 @@ export default function ReportScreen() {
                 <Picker
                     selectedValue={form.typesOfReports}
                     style={styles.input}
-                    dropdownIconColor={colorScheme === "dark" ? "#fff" : "#000"}
                     onValueChange={(itemValue) => handleInputChange("typesOfReports", itemValue)}
                 >
                     {reportTypes.map((type) => <Picker.Item key={type} label={type} value={type}/>)}
@@ -151,7 +150,7 @@ export default function ReportScreen() {
                         onValueChange={(value) => handleInputChange("involvesYou", value)}
                         style={styles.checkbox}
                     />
-                    <Text style={styles.checkboxLabel}>Does this report involve you?</Text>
+                    <Text>Does this report involve you?</Text>
                 </View>
 
                 {/* Image Upload Button */}
@@ -204,9 +203,6 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     },
     checkbox: {
         margin: 8,
-    },
-    checkboxLabel: {
-        color: colorScheme === "dark" ? "#fff" : "#000",
     },
     button: {
         backgroundColor: "#0066cc",
