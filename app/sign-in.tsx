@@ -3,6 +3,7 @@ import {Text, useThemeColor, View} from '@/components/Themed';
 import {useSession} from '@/components/AuthContext';
 import React from "react";
 import {router} from "expo-router";
+import {useColorScheme} from "@/components/useColorScheme";
 
 export default function SignIn() {
     const {signIn} = useSession();
@@ -11,6 +12,8 @@ export default function SignIn() {
     const textColor = useThemeColor({light: 'black', dark: 'white'}, 'text');
     const backgroundColor = useThemeColor({light: 'white', dark: 'black'}, 'background');
     const [error, setError] = React.useState('');
+    const colorScheme = useColorScheme();
+    const styles = Styles(colorScheme);
 
     const handleSignIn = async () => {
         const success = await signIn(email, password);
@@ -51,12 +54,13 @@ export default function SignIn() {
     );
 }
 
-const styles = StyleSheet.create({
+const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        backgroundColor: colorScheme === 'dark' ? '#222' : '#f9f9f9',
     },
     input: {
         width: '85%',
