@@ -206,8 +206,8 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     header: {
         fontSize: 18,
         fontWeight: 'bold',
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: 5,
+        marginBottom: 5,
         color: colorScheme === "light" ? "black" : "white"
     },
     pagerView: {
@@ -224,7 +224,6 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         width: "100%",
         height: 1,
         backgroundColor: colorScheme === "light" ? "#ccc" : "#666",
-        marginVertical: 20
     },
     purchaseSection: {
         width: "100%",
@@ -236,8 +235,8 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         backgroundColor: Platform.OS === "ios" ? "default" : colorScheme === "light" ? "white" : "#333",
         width: 300,
         height: Platform.OS === "ios" ? 150 : 40,
-        marginTop: Platform.OS === "ios" ? "auto" : 10,
-        marginBottom: Platform.OS === "ios" ? "auto" : 10
+        marginTop: Platform.OS === "ios" ? 5 : 10,
+        marginBottom: Platform.OS === "ios" ? 40 : 10
     },
     button: {
         borderRadius: 10,
