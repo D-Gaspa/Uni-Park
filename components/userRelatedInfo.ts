@@ -1,9 +1,39 @@
-import {onValue, ref, set} from "firebase/database";
+import {get, onValue, ref, set} from "firebase/database";
 import {useEffect, useState} from "react";
 import {auth, db} from "@/firebase-config";
 
 interface TicketTypes {
     [key: string]: string[];
+}
+
+export async function getUserRole(userId: string) {
+    const userRef = ref(db, `/users/${userId}/role`);
+    let role: string;
+
+    const snapshot = await get(userRef);
+    role = snapshot.val();
+
+    return role;
+
+}
+
+export async function getPreferredTheme(userId: string) {
+    const themeRef = ref(db, `/users/${userId}/preferredTheme`);
+    let theme: string;
+
+    const snapshot = await get(themeRef);
+    theme = snapshot.val();
+
+    return theme;
+}
+
+export async function setUserTheme(userId: string, theme: string) {
+    const themeRef = ref(db, `/users/${userId}/preferredTheme`);
+    try {
+        await set(themeRef, theme);
+    } catch (error) {
+        console.error("Failed to set user theme:", error);
+    }
 }
 
 export async function loadUserTicket(ticket: string, type: string) {

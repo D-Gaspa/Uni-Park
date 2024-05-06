@@ -1,7 +1,7 @@
 import React from 'react';
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {useStorageState} from './useStorageState';
-import {getUserRole} from "@/backend/userRoles";
+import {getPreferredTheme, getUserRole, setUserTheme} from "@/components/userRelatedInfo";
 
 export const AuthContext = React.createContext<{
     signIn: (email: string, password: string) => Promise<boolean>,
@@ -56,6 +56,9 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
             const role = await getUserRole(user.uid);
             setRole(role);
 
+            const preferredTheme = await getPreferredTheme(user.uid);
+            setTheme(preferredTheme);
+
             // Update the email
             updateEmail();
 
@@ -63,6 +66,23 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
         } catch (error) {
             console.error(error);
             return false;
+        }
+    };
+
+    const updateTheme = (theme: string) => {
+        // Update the theme in the state
+        setTheme(theme);
+
+        // Update the preferred theme in the database
+        if (session) {
+            setUserTheme(session, theme)
+                .then(() => {
+                    // Handle successful update here if needed
+                })
+                .catch((error) => {
+                    // Handle any errors here
+                    console.error("Failed to update theme:", error);
+                });
         }
     };
 
@@ -81,7 +101,7 @@ export function SessionProvider(props: React.PropsWithChildren<{}>) {
                 role,
                 email,
                 theme,
-                setTheme,
+                setTheme: updateTheme,
             }}>
             {props.children}
         </AuthContext.Provider>
