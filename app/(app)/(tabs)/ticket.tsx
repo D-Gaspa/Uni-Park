@@ -206,6 +206,7 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     header: {
         fontSize: 18,
         fontWeight: 'bold',
+        marginTop: 10,
         marginBottom: 10,
         color: colorScheme === "light" ? "black" : "white"
     },
@@ -235,8 +236,8 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         backgroundColor: Platform.OS === "ios" ? "default" : colorScheme === "light" ? "white" : "#333",
         width: 300,
         height: Platform.OS === "ios" ? 150 : 40,
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: Platform.OS === "ios" ? "auto" : 10,
+        marginBottom: Platform.OS === "ios" ? "auto" : 10
     },
     button: {
         borderRadius: 10,
