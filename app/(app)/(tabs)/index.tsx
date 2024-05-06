@@ -143,7 +143,7 @@ export default function HomeScreen() {
                                 spot.isClosed
                                     ? "rgba(50, 50, 50, 0.2)"
                                     : spot.availableSpots === 0
-                                        ? "rgb(116, 11, 11, 0.5)"
+                                        ? "rgba(125, 0, 0, 0.5)"
                                         : getSpotColor(spot.availableSpots, spot.totalSpots)
                             }
                             strokeColor={
