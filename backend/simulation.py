@@ -44,7 +44,7 @@ def simulate_parking_lot(parkinglot, no_slots):
                     parking_lot[free_index] = 1
 
         print(f"Lot {parkinglot}: {parking_lot.count(1)} cars parked out of {no_slots}")
-        update_parking_status(parkinglot, parking_lot.count(1))
+        update_parking_status(parkinglot, no_slots - parking_lot.count(1))
 
         # Simulate some cars leaving
         for i in range(len(parking_lot)):
