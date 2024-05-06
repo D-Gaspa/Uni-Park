@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {Alert, Animated, StyleSheet, TouchableOpacity, View,} from "react-native";
 import MapView, {Marker, Polygon} from "react-native-maps";
 import {getParkingSpots, ParkingSpot, updateParkingSpot,} from "@/components/parkingSpots";
-import mapStyleDark from "@/map-style-dark-mode.json";
 import mapStyleLight from "@/map-style-light-mode.json";
 import mapStyleBlue from "@/map-style-blue-mode.json";
 import {db} from "@/firebase-config";
@@ -128,7 +127,7 @@ export default function HomeScreen() {
         <View style={styles.container}>
             {/* Map View */}
             <MapView
-                customMapStyle={colorScheme === 'dark' ? mapStyleDark : colorScheme === 'light' ? mapStyleLight : mapStyleBlue}
+                customMapStyle={colorScheme === 'light' ? mapStyleLight : mapStyleBlue}
                 initialRegion={region}
                 onPress={handleMapPress}
                 ref={mapRef}
@@ -146,10 +145,7 @@ export default function HomeScreen() {
                             coordinates={spot.coordinates}
                             fillColor={
                                 spot.isClosed
-                                    ? "rgba(50, 50, 50, 0.2)"
-                                    : spot.availableSpots === 0
-                                        ? "rgba(125, 0, 0, 0.5)"
-                                        : getSpotColor(spot.availableSpots, spot.totalSpots)
+                                    ? "rgba(50, 50, 50, 0.2)" : getSpotColor(spot.availableSpots, spot.totalSpots)
                             }
                             strokeColor={spot.selected ? "white" : "black"}
                         />
@@ -157,7 +153,9 @@ export default function HomeScreen() {
                         {/* Parking Spot Marker */}
                         <Marker
                             coordinate={getCenter(spot.coordinates)}
-                            icon={require("@/assets/images/map-marker.png")}
+                            icon={spot.isClosed ? require("@/assets/images/map-marker-closed.png") :
+                                spot.availableSpots === 0 ? require("@/assets/images/map-marker.png") :
+                                    require("@/assets/images/map-marker-white.png")}
                             onPress={() => handlePress(spot.id)}
                             opacity={1}
                             title={spot.teacherOnly ? `Teacher Parking Spot ${spot.id}` : `Parking Spot ${spot.id}`}
