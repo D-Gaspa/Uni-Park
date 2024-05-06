@@ -10,7 +10,6 @@ export default function SignIn() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const textColor = useThemeColor({light: 'black', dark: 'white'}, 'text');
-    const backgroundColor = useThemeColor({light: 'white', dark: 'black'}, 'background');
     const [error, setError] = React.useState('');
     const colorScheme = useColorScheme();
     const styles = Styles(colorScheme);
@@ -27,7 +26,7 @@ export default function SignIn() {
     };
 
     return (
-        <View style={[styles.container, {backgroundColor}]}>
+        <View style={styles.container}>
             <TextInput
                 style={[styles.input, {color: textColor}]}
                 value={email}
