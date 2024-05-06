@@ -124,6 +124,7 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            {/* Map View */}
             <MapView
                 customMapStyle={colorScheme === 'dark' ? mapStyleDark : mapStyleLight}
                 initialRegion={region}
@@ -135,8 +136,10 @@ export default function HomeScreen() {
                 showsCompass={false}
                 showsIndoors={false}
             >
+                {/* Parking Spots */}
                 {parkingSpots.map((spot) => (
                     <React.Fragment key={spot.id}>
+                        {/* Parking Spot Polygon */}
                         <Polygon
                             coordinates={spot.coordinates}
                             fillColor={
@@ -146,9 +149,10 @@ export default function HomeScreen() {
                                         ? "rgba(125, 0, 0, 0.5)"
                                         : getSpotColor(spot.availableSpots, spot.totalSpots)
                             }
-                            strokeColor={
-                                spot.selected ? "white" : "black"}
+                            strokeColor={spot.selected ? "white" : "black"}
                         />
+
+                        {/* Parking Spot Marker */}
                         <Marker
                             coordinate={getCenter(spot.coordinates)}
                             icon={require("@/assets/images/map-marker.png")}
@@ -160,6 +164,8 @@ export default function HomeScreen() {
                     </React.Fragment>
                 ))}
             </MapView>
+
+            {/* Lock Icon for Admin */}
             {role === 'admin' && (
                 <Animated.View style={[styles.lockIcon, lockIconStyle]}>
                     <TouchableOpacity onPress={handleLockPress}>

@@ -3,7 +3,7 @@ import {
     Alert,
     Button,
     Image,
-    Keyboard,
+    Keyboard, Platform,
     ScrollView,
     StyleSheet,
     Text,
@@ -116,44 +116,55 @@ export default function ReportScreen() {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <ScrollView contentContainerStyle={styles.container}>
+                <Text style={styles.header}>Report an Issue</Text>
+                {/* Title Input */}
                 <TextInput
                     style={styles.input}
-                    placeholder="Title"
+                    placeholder="Title ..."
+                    placeholderTextColor={colorScheme === "dark" ? "#bbb" : "#666"}
                     value={form.title}
                     onChangeText={(text) => handleInputChange("title", text)}
                 />
+
+                {/* Report Type Picker */}
                 <Picker
                     selectedValue={form.typesOfReports}
                     style={styles.input}
+                    dropdownIconColor={colorScheme === "dark" ? "#fff" : "#000"}
                     onValueChange={(itemValue) => handleInputChange("typesOfReports", itemValue)}
                 >
-                    {reportTypes.map((type) => (
-                        <Picker.Item key={type} label={type} value={type}/>
-                    ))}
+                    {reportTypes.map((type) => <Picker.Item key={type} label={type} value={type}/>)}
                 </Picker>
+
+                {/* Description Input */}
                 <TextInput
                     style={[styles.input, styles.description]}
-                    placeholder="Description"
+                    placeholderTextColor={colorScheme === "dark" ? "#bbb" : "#666"}
+                    placeholder="Description ..."
                     value={form.description}
                     onChangeText={(text) => handleInputChange("description", text)}
-                    multiline={true}
+                    multiline
                 />
+
+                {/* Involvement Checkbox */}
                 <View style={styles.checkboxContainer}>
                     <Checkbox
                         value={form.involvesYou}
                         onValueChange={(value) => handleInputChange("involvesYou", value)}
                         style={styles.checkbox}
                     />
-                    <Text style={styles.checkboxLabel}>
-                        Does this report involve you?
-                    </Text>
+                    <Text style={styles.checkboxLabel}>Does this report involve you?</Text>
                 </View>
+
+                {/* Image Upload Button */}
                 <TouchableOpacity onPress={handleImageOption} style={styles.button}>
                     <Text style={styles.buttonText}>Add an image</Text>
                 </TouchableOpacity>
-                {form.image && (
-                    <Image source={{uri: form.image}} style={styles.image}/>
-                )}
+
+                {/* Display Selected Image */}
+                {form.image && <Image source={{uri: form.image}} style={styles.image}/>}
+
+                {/* Submit Button */}
                 <Button title="Submit Report" onPress={handleSubmit}/>
             </ScrollView>
         </TouchableWithoutFeedback>
@@ -168,19 +179,29 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         padding: 20,
         backgroundColor: colorScheme === "dark" ? "#222" : "#f9f9f9",
     },
+    header: {
+        alignSelf: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 50,
+        marginBottom: 5,
+        color: colorScheme === "light" ? "black" : "white"
+    },
     input: {
         width: "90%",
         padding: 12,
         marginVertical: 8,
         borderWidth: 1,
-        borderColor: colorScheme === "dark" ? "#aaa" : "#ddd",
-        backgroundColor: colorScheme === "dark" ? "#555" : "#fff",
-        borderRadius: 10, // Rounded edges
+        borderColor: Platform.OS === "ios" ? colorScheme === "dark" ? "#aaa" : "#ddd" : "transparent",
+        backgroundColor: colorScheme === "light" ? "#d1d1d1" : "#333",
+        borderRadius: Platform.OS === "ios" ? 10 : 0, // Rounded edges for iOS, none for Android
+        color: colorScheme === "dark" ? "#fff" : "#000",
     },
     description: {
+        color: colorScheme === "dark" ? "#fff" : "#000",
         height: 120,
         textAlignVertical: 'top',
-        borderRadius: 10, // Rounded edges
+        borderRadius: Platform.OS === "ios" ? 10 : 0, // Rounded edges for iOS, none for Android
     },
     checkboxContainer: {
         flexDirection: 'row',

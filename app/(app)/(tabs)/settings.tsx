@@ -11,15 +11,22 @@ export default function SettingsScreen() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}></Text>
+            {/* User Information Header */}
+            <Text style={styles.header}>User Information</Text>
+
+            {/* Email Display */}
             <View style={styles.settingItem}>
                 <Text style={styles.label}>Email:</Text>
                 <Text style={styles.value}>{email}</Text>
             </View>
+
+            {/* Role Display */}
             <View style={styles.settingItem}>
                 <Text style={styles.label}>Role:</Text>
                 <Text style={styles.value}>{role}</Text>
             </View>
+
+            {/* Sign Out Button */}
             <View style={styles.buttonContainer}>
                 <MaterialIcons name="logout" size={24} color="red"/>
                 <Button
@@ -46,6 +53,14 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
         paddingVertical: 10,
         textAlign: 'center', // Center the title horizontally
     },
+    header: {
+        alignSelf: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 5,
+        marginBottom: 5,
+        color: colorScheme === "light" ? "black" : "white"
+    },
     settingItem: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -55,11 +70,11 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     },
     label: {
         fontSize: 18,
-        color: '#666',
+        color: colorScheme === 'light' ? '#666' : '#ccc',
     },
     value: {
         fontSize: 16,
-        color: '#444',
+        color: colorScheme === 'light' ? '#333' : '#fff',
     },
     buttonContainer: {
         marginTop: 20,

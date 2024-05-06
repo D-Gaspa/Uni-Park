@@ -20,23 +20,38 @@ function TabBarIcon(props: {
 export default function TabLayout() {
     const colorScheme = useColorScheme();
 
+// Define common options for headerRight
+    const headerRight = () => (
+        <Link href="/faq" asChild>
+            <Pressable>
+                {({pressed}) => (
+                    <FontAwesome
+                        name="question-circle-o"
+                        size={25}
+                        color={Colors[colorScheme ?? 'light'].text}
+                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
+                    />
+                )}
+            </Pressable>
+        </Link>
+    );
+
     return (
         <Tabs
             screenOptions={{
                 headerShown: useClientOnlyValue(true),
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
                 tabBarShowLabel: false,
-            }}>
+            }}
+        >
+            {/* Home Screen */}
             <Tabs.Screen
                 name="index"
                 options={{
                     title: 'Home',
                     headerTitle: '',
                     headerTransparent: true,
-                    tabBarIcon: ({color}) => <TabBarIcon
-                        name="home"
-                        color={color}
-                    />,
+                    tabBarIcon: ({color}) => <TabBarIcon name="home" color={color}/>,
                     headerLeft: () => (
                         <Pressable onPress={() => Linking.openURL(constantStrings.url)}>
                             {({pressed}) => (
@@ -49,44 +64,22 @@ export default function TabLayout() {
                             )}
                         </Pressable>
                     ),
-                    headerRight: () => (
-                        <Link href="/faq" asChild>
-                            <Pressable>
-                                {({pressed}) => (
-                                    <FontAwesome
-                                        name="question-circle-o"
-                                        size={25}
-                                        color={Colors[colorScheme ?? 'light'].text}
-                                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
-                    ),
+                    headerRight,
                 }}
             />
+
+            {/* Ticket Screen */}
             <Tabs.Screen
                 name="ticket"
                 options={{
                     title: 'Ticket',
                     tabBarIcon: ({color}) => <TabBarIcon name="ticket" color={color}/>,
                     headerTransparent: true,
-                    headerRight: () => (
-                        <Link href="/faq" asChild>
-                            <Pressable>
-                                {({pressed}) => (
-                                    <FontAwesome
-                                        name="question-circle-o"
-                                        size={25}
-                                        color={Colors[colorScheme ?? 'light'].text}
-                                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
-                    ),
+                    headerRight,
                 }}
             />
+
+            {/* Report Screen */}
             <Tabs.Screen
                 name="report"
                 options={{
@@ -94,42 +87,18 @@ export default function TabLayout() {
                     headerTitle: 'Report Accident',
                     tabBarIcon: ({color}) => <TabBarIcon name="warning" color={color}/>,
                     headerTransparent: true,
-                    headerRight: () => (
-                        <Link href="/faq" asChild>
-                            <Pressable>
-                                {({pressed}) => (
-                                    <FontAwesome
-                                        name="question-circle-o"
-                                        size={25}
-                                        color={Colors[colorScheme ?? 'light'].text}
-                                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
-                    ),
+                    headerRight,
                 }}
             />
+
+            {/* Settings Screen */}
             <Tabs.Screen
                 name="settings"
                 options={{
                     title: 'Settings',
                     tabBarIcon: ({color}) => <TabBarIcon name="cog" color={color}/>,
                     headerTransparent: true,
-                    headerRight: () => (
-                        <Link href="/faq" asChild>
-                            <Pressable>
-                                {({pressed}) => (
-                                    <FontAwesome
-                                        name="question-circle-o"
-                                        size={25}
-                                        color={Colors[colorScheme ?? 'light'].text}
-                                        style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
-                    ),
+                    headerRight,
                 }}
             />
         </Tabs>

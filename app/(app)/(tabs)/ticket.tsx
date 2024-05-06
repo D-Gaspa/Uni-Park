@@ -232,7 +232,7 @@ const Styles = (colorScheme: string | null | undefined) => StyleSheet.create({
     },
     picker: {
         color: colorScheme === "light" ? "black" : "white",
-        backgroundColor: Platform.OS === "ios" ? "default" : colorScheme === "light" ? "white" : "#333",
+        backgroundColor: Platform.OS === "ios" ? "default" : colorScheme === "light" ? "#d1d1d1" : "#333",
         width: 300,
         height: Platform.OS === "ios" ? 150 : 40,
         marginTop: Platform.OS === "ios" ? 5 : 10,
