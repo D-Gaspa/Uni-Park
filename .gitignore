@@ -21,6 +21,7 @@ yarn.lock
 firebaseConfig.js
 firebase-adminsdk.json
 firebase-config.js
+/backend/credentials.py
 
 # Native
 *.orig.*
