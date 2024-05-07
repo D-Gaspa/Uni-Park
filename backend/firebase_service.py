@@ -19,7 +19,7 @@ def get_parking_spots():
     return spots
 
 
-def update_parking_spot(spot_id: int, spot_data: dict):
+def update_parking_lot(spot_id: int, spot_data: dict):
     # Get a reference to the parking spots in the database
     spots_ref = db.reference('spots')
 
