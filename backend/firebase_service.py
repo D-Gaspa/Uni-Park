@@ -25,3 +25,13 @@ def update_parking_lot(spot_id: int, spot_data: dict):
 
     # Convert spot_id to string, subtract 1 to match the database index, and update the data
     spots_ref.child(str(spot_id - 1)).update(spot_data)
+
+
+def get_parking_lot(spot_id: int):
+    # Get a reference to the parking spots in the database
+    spots_ref = db.reference('spots')
+
+    # Get the data
+    spot = spots_ref.child(str(spot_id - 1)).get()
+
+    return spot

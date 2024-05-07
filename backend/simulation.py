@@ -1,8 +1,9 @@
 import datetime
 import random
+
 import numpy as np
 
-from backend.firebase_service import update_parking_lot
+from backend.firebase_service import update_parking_lot, get_parking_lot
 
 # Default parking lot data
 default_parking_lots_data = [
@@ -19,31 +20,28 @@ default_parking_lots_data = [
 
 class ParkingStructure:
     def __init__(self, num_spots: int):
-        self.parking_lots = [ParkingLot(i + 1) for i in range(num_spots)]
+        self.parking_lots = [ParkingLot(i + 1, default_parking_lots_data[i]) for i in range(num_spots)]
 
     def get_total_available_spots(self):
-        total_available_spots = 0
-        for lot in self.parking_lots:
-            total_available_spots += lot.get_total_available_spots()
+        total_available_spots = sum(lot.get_total_available_spots() for lot in self.parking_lots)
         return total_available_spots
 
-    def getTotalAvailability(self):
-        total_spots = 0
-        total_available_spots = 0
-        for lot in self.parking_lots:
-            total_spots += lot.total_spots
-            total_available_spots += lot.available_spots
-
+    def get_total_availability(self):
+        total_spots = sum(lot.total_spots for lot in self.parking_lots)
+        total_available_spots = sum(lot.available_spots for lot in self.parking_lots)
         return total_available_spots, total_spots
 
 
 class ParkingLot:
-    def __init__(self, spot_id: int):
+    def __init__(self, spot_id: int, spot_data: dict):
         self.id = spot_id
-        self.total_spots = self.get_total_spots(spot_id)
+        self.total_spots = spot_data["totalSpots"]
         self.available_spots = self.total_spots
-        self.is_closed = self.get_is_closed(spot_id)
+        self.is_closed = spot_data["isClosed"]
         self.spots = [ParkingSpot(i + 1) for i in range(self.total_spots)]
+
+    def get_total_available_spots(self):
+        return self.available_spots
 
     @staticmethod
     def get_total_spots(spot_id):
@@ -56,9 +54,6 @@ class ParkingLot:
         for spot in default_parking_lots_data:
             if spot["id"] == spot_id:
                 return spot["isClosed"]
-
-    def get_total_available_spots(self):
-        return self.available_spots
 
     def close(self):
         self.is_closed = True
@@ -109,6 +104,19 @@ class Simulation:
         self.parking_structure = parking_structure
         self.current_time = datetime.datetime.now().replace(hour=7, minute=0, second=0)  # Start at 7 AM
 
+    def update_database(self):
+        for parking_lot in self.parking_structure.parking_lots:
+            update_parking_lot(parking_lot.id, {
+                "availableSpots": parking_lot.available_spots,
+                "isClosed": parking_lot.is_closed
+            })
+
+    def update_from_database(self):
+        for parking_lot in self.parking_structure.parking_lots:
+            updated_data = get_parking_lot(parking_lot.id)  # fetch_parking_lot_data needs to be implemented
+            parking_lot.available_spots = updated_data["availableSpots"]
+            parking_lot.is_closed = updated_data["isClosed"]
+
     def advance_time(self):
         self.current_time += datetime.timedelta(hours=1)
 
@@ -128,9 +136,11 @@ class Simulation:
 
     def simulate_one_hour(self):
         # Check if the simulation has reached the end time
-        if self.current_time.hour == 22:
+        if self.current_time.hour == 21:
             print("Simulation has reached the end time (9 PM).")
             return False
+
+        self.update_from_database()  # Update local data from database
 
         current_hour = self.get_current_hour()
 
@@ -139,23 +149,15 @@ class Simulation:
             adjust_parking_lot(parking_lot, target_occupancy)
 
         # Print the availability of the structure Available/Total
-        total_available_spots, total_spots = self.parking_structure.getTotalAvailability()
+        total_available_spots, total_spots = self.parking_structure.get_total_availability()
 
         self.advance_time()  # Move to the next hour
         current_hour = self.get_current_hour()
 
         print(f"Hour {current_hour}: {total_available_spots}/{total_spots} spots available.")
 
-        update_database(self)  # Update the Firebase database
+        self.update_database()
         return True
-
-
-def update_database(simulation):
-    for parking_lot in simulation.parking_structure.parking_lots:
-        update_parking_lot(parking_lot.id, {
-            "availableSpots": parking_lot.available_spots,
-            "isClosed": parking_lot.is_closed
-        })
 
 
 def get_mean_occupancy(current_hour):
@@ -170,7 +172,7 @@ def get_mean_occupancy(current_hour):
     elif 14 < current_hour <= 16:  # 3-4 PM
         return np.random.uniform(0.5, 0.75)  # 50-75%
     elif 16 < current_hour <= 18:  # 5-6 PM
-        return np.random.uniform(0.4, 0.6)  # 40-60%
+        return np.random.uniform(0.3, 0.6)  # 30-60%
     elif 18 < current_hour <= 19:  # 7-8 PM
         return np.random.uniform(0.2, 0.4)  # 20-40%
     elif 19 < current_hour <= 21:  # 8-9 PM
@@ -214,49 +216,50 @@ def start_simulation(simulation, specific_time=False):
     # Initialize all parking spots to be open and available
     simulation.open_all_parking_spots()
 
-    if specific_time:
-        go_to_specific_time(simulation)
-
     print(f"Simulation started at {simulation.current_time.strftime('%H:%M')}.")
 
     # Update the Firebase database with the initial values
-    update_database(simulation)
+    simulation.update_database()
+
+    if specific_time:
+        go_to_specific_time(simulation)
 
 
 def go_to_specific_time(simulation):
     while True:
-        target_time_str = input("Enter target time (HH:MM, 24-hour format): ")
+        target_time_str = input("Enter target time (HH, 24-hour format): ")
         try:
-            target_time = datetime.datetime.strptime(target_time_str, '%H:%M').time()
+            target_hour = int(target_time_str)
 
             # Input Validation
-            if simulation.current_time > datetime.datetime.combine(simulation.current_time.date(), target_time):
-                print("Target time must be later than current simulation time.")
-                continue  # Ask for input again
+            if target_hour < 7 or target_hour > 21:
+                print("Invalid time. Please enter a time between 7 and 21.")
+                continue
 
-            if target_time.hour > 21:
-                print("Target time must be within the simulation range (7 AM to 9PM).")
-                continue  # Ask for input again
-
-            # Simulate up to the target time
-            while simulation.current_time.hour < target_time.hour:
+            # Advance the simulation hour by hour until it reaches the target hour
+            while simulation.get_current_hour() < target_hour:
                 simulation.simulate_one_hour()
 
-            simulation.current_time = simulation.current_time.replace(hour=target_time.hour, minute=target_time.minute)
-            print(f"Simulation time set to {target_time_str}")
             break
 
         except ValueError:
-            print("Invalid time format. Please use HH:MM (24-hour).")
+            print("Invalid time format. Please use HH (24-hour).")
 
 
-def close_parking_lot(simulation):
+def close_or_open_parking_lot(simulation):
     while True:  # Loop for input validation
-        slot_id = int(input("Enter the ID of the parking lot to close: "))
+        slot_id = int(input("Enter the ID of the parking lot to close/open: "))
         parking_lot = next((s for s in simulation.parking_structure.parking_lots if s.id == slot_id), None)
         if parking_lot:
-            parking_lot.close()
-            print(f"Parking lot {slot_id} has been closed.")
+            if parking_lot.is_closed:
+                parking_lot.open()
+                print(f"Parking lot {slot_id} has been opened.")
+            else:
+                parking_lot.close()
+                print(f"Parking lot {slot_id} has been closed.")
+
+            # Update the Firebase database with the new values
+            simulation.update_database()
             break
         else:
             print(f"Error: Parking lot {slot_id} not found. Please try again.")
@@ -286,10 +289,10 @@ def main_menu():
 
 
 def simulation_menu():
-    print("Simulation Menu:")
+    print("\nSimulation Menu:")
     print("1. Simulate one hour")
     print("2. Go to specific time")
-    print("3. Close a parking lot")
+    print("3. Close/Open a parking lot")
     print("4. Reset and go back to main menu")
     print("5. Go back to main menu")
 
@@ -310,7 +313,7 @@ def run_simulation(simulation, specific_time=False):
         elif sim_choice == "2":
             go_to_specific_time(simulation)
         elif sim_choice == "3":
-            close_parking_lot(simulation)
+            close_or_open_parking_lot(simulation)
         elif sim_choice == "4":
             stop_and_reset(simulation)
             break
