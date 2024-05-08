@@ -285,7 +285,7 @@ def main_menu():
     print("1. Start or restart simulation")
     print("2. Start from a specific hour")
     print("3. Reset to default values")
-    print("3. Exit")
+    print("4. Exit")
 
 
 def simulation_menu():
