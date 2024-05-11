@@ -31,39 +31,43 @@ Here are some screenshots of the UniPark application:
 ### Home View
 
 <p float="left">
-  <img src="/screenshots/home_view_light_1.jpg" width="250"  alt="Home View Light 1"/>
-  <img src="/screenshots/home_view_light_2.jpg" width="250"  alt="Home View Light 2"/>
-  <img src="/screenshots/home_view_dark.jpg" width="250" alt="Home View Dark"/>
+  <img src="/screenshots/home_view_light_1.jpg" width="260"  alt="Home View Light 1"/>
+  <img src="/screenshots/home_view_light_2.jpg" width="260"  alt="Home View Light 2"/>
+  <img src="/screenshots/home_view_dark.jpg" width="260" alt="Home View Dark"/>
 </p>
 
 ### FAQ View
 
 <p float="left">
-  <img src="/screenshots/faq_view.jpg" width="250" alt="FAQ View"/>
+  <img src="/screenshots/faq_view.jpg" width="260" alt="FAQ View"/>
 </p>
 
 ### Ticket View
 
 <p float="left">
-  <img src="/screenshots/ticket_view.jpg" width="250" alt="Ticket View"/>
+  <img src="/screenshots/ticket_view.jpg" width="260" alt="Ticket View"/>
 </p>
 
 ### Report View
 
 <p float="left">
-  <img src="/screenshots/report_view.jpg" width="250" alt="Report View"/>
+  <img src="/screenshots/report_view.jpg" width="260" alt="Report View"/>
 </p>
 
 ### Admin Home View
 
 <p float="left">
-  <img src="/screenshots/admin_home_view.jpg" width="250" alt="Admin Home View"/>
+  <img src="/screenshots/admin_home_view.jpg" width="260" alt="Admin Home View"/>
 </p>
 
 ## 🎞️ Demo
 
-Watch this [video](https://www.youtube.com/watch?v=video_link) to see a simulation of the real-time parking availability
-feature.
+Here is a demonstration of a timelapse representing the parking availability feature from 7 AM to 7 PM:
+
+<p float="left">
+  <img src="/demos/demo_light.gif" width="260" alt="Demo Light"/>
+  <img src="/demos/demo_dark.gif" width="260" alt="Demo Dark"/>
+</p>
 
 ## 🏁 Conclusion
 
