@@ -34,12 +34,13 @@
       [
         "@stripe/stripe-react-native",
         {
-            "merchantIdentifier": "your_merchant_identifier",
+          "merchantIdentifier": "your_merchant_identifier",
           "enableGooglePay": false
         }
-      ]
+      ],
+      "expo-font",
+      "expo-secure-store"
     ],
-    "experiments": {
-    }
+    "experiments": {}
   }
 }

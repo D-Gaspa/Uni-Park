@@ -18,7 +18,7 @@ The project follows a modular architecture, with clear separation of concerns, m
   guesswork!
 - **Interactive Map:** Navigate directly to available spots with our intuitive map interface.
 - **Easy Reporting:** Report issues like car accidents or unauthorized parking directly through the app.
-- **Personalized Experience:** Customize the app with your preferred theme (light or dark mode).
+- **Personalized Experience:** Customize the app with your preferred theme (light, blue or dark mode).
 - **Ticket Management**: View and purchase parking tickets directly from the app.
 - **FAQs**: A list of frequently asked questions for quick resolution of common queries.
 - **User-Friendly Interface:** UniPark is designed for simplicity, making it easy for anyone to find parking.
@@ -30,27 +30,35 @@ Here are some screenshots of the UniPark application:
 
 ### Home View
 
-![Home View](./screenshots/home_view.png)
+<p float="left">
+  <img src="/screenshots/home_view_light_1.jpg" width="250"  alt="Home View Light 1"/>
+  <img src="/screenshots/home_view_light_2.jpg" width="250"  alt="Home View Light 2"/>
+  <img src="/screenshots/home_view_dark.jpg" width="250" alt="Home View Dark"/>
+</p>
 
 ### FAQ View
 
-![FAQ View](./screenshots/faq_view.png)
+<p float="left">
+  <img src="/screenshots/faq_view.jpg" width="250" alt="FAQ View"/>
+</p>
 
 ### Ticket View
 
-![Ticket View](./screenshots/ticket_view.png)
+<p float="left">
+  <img src="/screenshots/ticket_view.jpg" width="250" alt="Ticket View"/>
+</p>
 
 ### Report View
 
-![Report View](./screenshots/report_view.png)
-
-### Different Color Themes
-
-![Color Themes](./screenshots/color_themes.png)
+<p float="left">
+  <img src="/screenshots/report_view.jpg" width="250" alt="Report View"/>
+</p>
 
 ### Admin Home View
 
-![Admin Home View](./screenshots/admin_home_view.png)
+<p float="left">
+  <img src="/screenshots/admin_home_view.jpg" width="250" alt="Admin Home View"/>
+</p>
 
 ## 🎞️ Demo
 
@@ -61,5 +69,4 @@ feature.
 
 In summary, UniPark is more than just a parking application; it's a comprehensive solution for managing parking spots,
 buying tickets, reporting issues, and much more. Its dynamic design, real-time updates, user-friendly interface, and
-efficient navigation make it the perfect choice for streamlining campus parking. Join us in improving the parking
-experience, one spot at a time.
+efficient navigation make it the perfect choice for streamlining campus parking.
